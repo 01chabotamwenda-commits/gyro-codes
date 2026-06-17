@@ -38,12 +38,10 @@ static void sendTelemetry()
                   vibrationRms, pwmPct, autoMode ? "ON" : "OFF");
 
     // JSON
-    float rpmTarget = autoMode ? atc.getLastRpmTarget() : 0.0f;
-    float rpmErr    = autoMode ? atc.getLastRpmError()  : 0.0f;
-    Serial.printf("{\"rpm\":%lu,\"rpmTgt\":%.0f,\"rpmErr\":%.0f,\"tiltX\":%.1f,\"tiltY\":%.1f,\"tiltZ\":%.1f,"
+    Serial.printf("{\"rpm\":%lu,\"tiltX\":%.1f,\"tiltY\":%.1f,\"tiltZ\":%.1f,"
                   "\"rotationZ\":%.2f,\"avgTiltMag\":%.2f,\"temp\":25.0,"
                   "\"pwm\":%.2f,\"vibration\":%.3f,\"autoMode\":%s}\n",
-                  rpmValue, rpmTarget, rpmErr, errorX, errorY, errorZ,
+                  rpmValue, errorX, errorY, errorZ,
                   gyroZ_dps, tiltMag, pwmPct, vibrationRms,
                   autoMode ? "true" : "false");
 }

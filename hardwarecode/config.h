@@ -8,7 +8,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <math.h>
-#include <ESP32Servo.h>
 
 // ── Pin assignments ───────────────────────────────────────────────────────────
 static const int PIN_ESC       = 4;
@@ -25,11 +24,16 @@ static const uint8_t REG_ACCEL_CFG = 0x1C;
 static const uint8_t REG_GYRO_CFG  = 0x1B;
 static const uint8_t REG_ACCEL_OUT = 0x3B;
 
-// ── ESC / throttle constants ──────────────────────────────────────────────────
-static const int THROTTLE_ARM  = 105;  // ESC arm / idle value
-static const int THROTTLE_MIN  = 115;  // minimum running throttle
-static const int THROTTLE_MAX  = 180;  // maximum throttle
-static const int THROTTLE_STEP = 5;    // manual speed-up / speed-down step
+// ── PWM / ledc constants (match the working tester) ──────────────────────────
+static const int     PWM_FREQ       = 50;     // 50 Hz — standard ESC signal
+static const int     PWM_RESOLUTION = 16;     // 16-bit → 65535 counts per period
+static const uint32_t PWM_PERIOD_US = 20000;  // 1 / 50 Hz = 20 000 µs
+
+// ── ESC / throttle constants (in MICROSECONDS, 1000–2000 µs range) ────────────
+static const int THROTTLE_ARM  = 1000;  // ESC arm / idle — minimum pulse
+static const int THROTTLE_MIN  = 1100;  // minimum running throttle
+static const int THROTTLE_MAX  = 2000;  // maximum throttle
+static const int THROTTLE_STEP = 50;    // manual speed-up / speed-down step (µs)
 
 // ── Kalman filter tuning ──────────────────────────────────────────────────────
 static const float KF_Q_ANGLE   = 0.001f;
@@ -48,7 +52,8 @@ static const uint32_t IR_MAX_PERIOD_US       = 10000000UL;
 static const uint8_t  RPM_AVG_SAMPLES        = 8;
 
 // ── Non-blocking ramp timing ──────────────────────────────────────────────────
-static const uint32_t RAMP_STEP_MS = 12;  // ms between each 1-unit throttle increment
+static const uint32_t RAMP_STEP_MS = 12;   // ms between each ramp tick
+static const int      RAMP_STEP_US = 5;    // µs to add/subtract per ramp tick
 
 // ── Vibration monitor ─────────────────────────────────────────────────────────
 static const uint8_t VIBRATION_WINDOW = 16;
