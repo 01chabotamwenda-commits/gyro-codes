@@ -6,3 +6,9 @@ id = "adNUvHcRbMTHQIwBfXGft"
 uri = "file://platformio.tar.gz"
 type = "unspecified"
 title = "PlatformIO Project (all files + .ini)"
+
+[[outputs]]
+id = "hYKxdoMId_OjJ82PnTE9T"
+uri = "file://gyro-codes-firmware.tar.gz"
+type = "unspecified"
+title = "gyro-codes-firmware.tar.gz"
