@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Gyro Monitor API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: telemetry
+    description: ESP32 telemetry data
+  - name: sessions
+    description: Session management
+  - name: device
+    description: Device connection and commands
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,142 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /telemetry:
+    get:
+      operationId: listTelemetry
+      tags: [telemetry]
+      summary: List telemetry readings
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: sessionId
+          in: query
+          schema:
+            type: [integer, "null"]
+      responses:
+        "200":
+          description: List of telemetry readings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TelemetryReading"
+    post:
+      operationId: createTelemetry
+      tags: [telemetry]
+      summary: Store a telemetry reading
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TelemetryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TelemetryReading"
+
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [sessions]
+      summary: List all sessions
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Session"
+    post:
+      operationId: createSession
+      tags: [sessions]
+      summary: Create a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+
+  /sessions/{id}:
+    get:
+      operationId: getSession
+      tags: [sessions]
+      summary: Get a session by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Session details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+    patch:
+      operationId: updateSession
+      tags: [sessions]
+      summary: Update a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+
+  /device/command:
+    post:
+      operationId: sendCommand
+      tags: [device]
+      summary: Send a command to the ESP32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommandInput"
+      responses:
+        "200":
+          description: Command sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandResult"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +174,179 @@ components:
       required:
         - status
 
+    TelemetryReading:
+      type: object
+      properties:
+        id:
+          type: integer
+        sessionId:
+          type: [integer, "null"]
+        rpm:
+          type: number
+        tiltX:
+          type: number
+        tiltY:
+          type: number
+        tiltZ:
+          type: number
+        rotationZ:
+          type: number
+        avgTiltMag:
+          type: number
+        temp:
+          type: number
+        throttle:
+          type: number
+        pwmPct:
+          type: number
+        vibration:
+          type: number
+        autoMode:
+          type: boolean
+        pidError:
+          type: [number, "null"]
+        pidOutput:
+          type: [number, "null"]
+        pidIntegral:
+          type: [number, "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - rpm
+        - tiltX
+        - tiltY
+        - tiltZ
+        - throttle
+        - pwmPct
+        - autoMode
+        - createdAt
+
+    TelemetryInput:
+      type: object
+      properties:
+        sessionId:
+          type: [integer, "null"]
+        rpm:
+          type: number
+        tiltX:
+          type: number
+        tiltY:
+          type: number
+        tiltZ:
+          type: number
+        rotationZ:
+          type: number
+        avgTiltMag:
+          type: number
+        temp:
+          type: number
+        throttle:
+          type: number
+        pwmPct:
+          type: number
+        vibration:
+          type: number
+        autoMode:
+          type: boolean
+        pidError:
+          type: [number, "null"]
+        pidOutput:
+          type: [number, "null"]
+        pidIntegral:
+          type: [number, "null"]
+      required:
+        - rpm
+        - tiltX
+        - tiltY
+        - tiltZ
+        - throttle
+        - pwmPct
+        - autoMode
+
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum: [running, completed, error, idle]
+        targetRpm:
+          type: number
+        duration:
+          type: number
+        startedAt:
+          type: [string, "null"]
+          format: date-time
+        endedAt:
+          type: [string, "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - status
+        - targetRpm
+        - duration
+        - createdAt
+
+    SessionInput:
+      type: object
+      properties:
+        name:
+          type: string
+        targetRpm:
+          type: number
+        duration:
+          type: number
+      required:
+        - name
+        - targetRpm
+        - duration
+
+    SessionUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [running, completed, error, idle]
+        endedAt:
+          type: string
+          format: date-time
+
+    CommandInput:
+      type: object
+      properties:
+        command:
+          type: string
+          enum:
+            - MOTOR_START
+            - MOTOR_STOP
+            - EMERGENCY_STOP
+            - SPEED_UP
+            - SPEED_DOWN
+            - RESET_REF
+            - AUTO_ON
+            - AUTO_OFF
+        key:
+          type: string
+          enum: [S, X, H, L, Z, A]
+      required:
+        - command
+
+    CommandResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message

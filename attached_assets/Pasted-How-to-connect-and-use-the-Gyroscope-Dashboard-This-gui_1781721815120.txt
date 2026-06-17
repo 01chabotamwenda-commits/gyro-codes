@@ -1,0 +1,431 @@
+How to connect and use the Gyroscope Dashboard
+This guide walks you through everything — from wiring the first sensor to running a live session. The dashboard connects to a real ESP32 microcontroller with an MPU-6050 IMU over USB. A motor driver, temperature sensor, and SD card are optional — the system auto-detects which sensors are present and shows only the panels your hardware can actually provide data for. Until an ESP32 connects, the dashboard shows zeros on all charts.
+
+ESP32
+MPU-6050
+WiFi / BLE / USB
+OTA Firmware
+SD Card logging
+Quick Start Checklist
+Have an ESP32 + MPU-6050? Here's the 5-minute path to a running system.
+
+Wire MPU-6050 to ESP32 via I²C (SDA→GPIO 21, SCL→GPIO 22)
+Flash gyro_monitor.ino via Arduino IDE (set board to ESP32 Dev Module)
+Plug in USB cable, open Settings → Serial Connection, pick the port
+Watch the Dashboard — live tilt and rotation appear; offline panels show for sensors not wired
+Press Start Session to begin logging
+Optional: wire motor driver PWM to GPIO 25 for RPM and motor control
+Optional: wire temperature sensor (DS18B20 → GPIO 4) for thermal monitoring
+Optional: wire SD card via SPI (CS→GPIO 5) for on-device logging
+Hardware You Need
+TIPMPU-6050 only? That's all you need to get started. Wire it to the ESP32, flash the firmware, connect via USB, and the dashboard will show live tilt, rotation, and vibration data immediately. Panels for temperature, RPM, and motor control will show an "offline" badge — they activate automatically when you add those sensors later.
+ESP32 Dev Board
+
+Required
+Any 38-pin ESP32 variant works. ESP32-WROOM-32 is recommended.
+
+MPU-6050 IMU
+
+Required
+6-axis accelerometer + gyroscope. Provides tilt X/Y, rotation Z, and vibration (derived from accelerometer). This is the only sensor required for basic operation.
+
+Motor + ESC / Driver
+
+Optional
+Optional — enables RPM and motor PWM panels. Brushless or brushed motor with a PWM-capable driver (e.g. L298N, DRV8833, or ESC for BLDC). Connect PWM signal to GPIO 25.
+
+Temperature Sensor
+
+Optional
+Optional — enables the temperature panel. DS18B20 (1-Wire, GPIO 4), NTC thermistor, or BME280 breakout. Without this, the temperature chart shows an offline badge.
+
+MicroSD Card Module
+
+Optional
+Optional — enables on-device logging when WiFi is unavailable. SPI-connected SD breakout (CS→GPIO 5).
+
+5V Power Supply
+
+Required
+Power the ESP32 via USB cable for flashing and serial mode. If you add a motor, the driver needs its own external power supply.
+
+USB Cable (Type-C or Micro)
+
+Required
+Required — used to flash firmware and connect to the desktop app over USB serial. Type-C or Micro-USB depending on your ESP32 variant.
+
+Wiring the ESP32
+All connections use 3.3V logic from the ESP32. Do not connect 5V directly to GPIO pins.
+
+MPU-6050 (I²C) — Tilt & Gyroscope
+
+MPU-6050 Pin	ESP32 GPIO	Notes
+VCC	3.3V	Power — use 3.3V not 5V
+GND	GND	Common ground
+SDA	GPIO 21	I²C data line
+SCL	GPIO 22	I²C clock line
+AD0	GND	I²C address select — GND = 0x68
+INT	(not required)	Interrupt — leave unconnected
+Motor Driver (PWM)
+
+Signal	ESP32 GPIO	Notes
+PWM IN	GPIO 25	Motor speed signal — LEDC channel 0
+GND	GND	Shared ground with driver power supply
+WARNINGThe motor driver's power supply (VM / VCC) must come from your external power supply, not the ESP32's 3.3V or 5V pin. Running even a small motor from the ESP32 will brown it out.
+SD Card Module (SPI) — Optional
+
+SD Module Pin	ESP32 GPIO	Notes
+CS	GPIO 5	Chip Select
+MOSI	GPIO 23	SPI MOSI
+MISO	GPIO 19	SPI MISO
+SCK	GPIO 18	SPI Clock
+VCC	3.3V	Some modules need 5V — check your breakout
+GND	GND	Common ground
+
+Wiring diagram (ASCII)
+Loading the Firmware
+1
+Install the Arduino IDE
+
+Download Arduino IDE 2.x from arduino.cc. Open it and go to File → Preferences.
+
+Add the ESP32 board URL to Additional Boards Manager URLs:
+
+https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+2
+Install the ESP32 board package
+
+Go to Tools → Board → Boards Manager. Search for esp32 by Espressif Systems and install it (latest stable version).
+
+3
+Install required libraries
+
+Open Sketch → Include Library → Manage Libraries and install all of these:
+
+MPU6050 by Electronic Cats
+ArduinoJson by Benoit Blanchon
+AsyncTCP by dvarrel
+ESPAsyncWebServer by lacamera
+ElegantOTA by Ayush Sharma
+SD (built-in)
+4
+Open and configure the firmware
+
+Open docs/ESP32-FIRMWARE/gyro_monitor/gyro_monitor.ino from this project's repository.
+
+At the top of the file, set your WiFi credentials so the ESP32 can connect on first boot:
+
+#define WIFI_SSID     "YourNetworkName"
+#define WIFI_PASSWORD "YourPassword"
+TIPYou can leave these blank and configure the network from Settings → Device Connection after flashing. The firmware will start in Access Point mode so you can reach the dashboard to configure it.
+5
+Flash to the ESP32
+
+Select Tools → Board → ESP32 Dev Module and the correct COM port. Set Upload Speed to 921600 for faster flashing.
+
+Click the Upload button (→). Hold the BOOT button on the ESP32 if it doesn't enter flash mode automatically.
+
+When you see Leaving... Hard resetting via RTS pin the flash is complete.
+
+6
+Verify it's running
+
+Open the Arduino Serial Monitor at 115200 baud. You should see the handshake lines, then live data:
+
+[BOOT] GyroMonitor v1.0.0
+[WiFi] Connecting to Lab-WiFi-5G...
+[WiFi] Connected — IP: 192.168.1.42
+[IMU]  MPU-6050 initialized
+[SD]   SD card mounted — 3.8 GB free
+
+DEVICE_INFO:esp32LOGIC|VERSION:1.0|COMPONENTS:MPU6050,ESC,TEMP_SENSOR|BAUD:115200
+HEALTH:MPU6050=OK|ESC=OK|TEMP_SENSOR=OK
+
+{"rpm":0,"tiltX":0.12,"tiltY":-0.04,"temp":24.6,"pwm":0}
+{"rpm":0,"tiltX":0.11,"tiltY":-0.05,"temp":24.6,"pwm":0}
+NOTEThe two DEVICE_INFO / HEALTH lines are how the dashboard auto-detects your sensors. If they don't appear, see the Auto-Detection section below for the Arduino code to add.
+TIPNo IP address shown? The ESP32 couldn't reach your network. Open Settings → Device Connection to reconfigure or switch to Hotspot mode.
+Writing your own compatible firmware
+
+You don't have to use the provided gyro_monitor.ino. Any Arduino sketch that follows the two-step protocol below will work with the dashboard automatically — match the data format and the charts, panels, and auto-detection all activate on their own.
+
+
+Protocol reference — startup handshake, JSON fields & commands
+
+Example sketch — Phase 0 angle measurement (adapted for this dashboard)
+Connecting the ESP32 to the Dashboard
+There are three ways to connect. Choose the one that suits your setup.
+
+Option A — WiFi Station (Recommended)
+
+ESP32 joins your existing WiFi network. Dashboard runs in the browser on the same network.
+
+Best for most setups
+1.
+Open Settings → Device Connection
+2.
+Select "WiFi Station" mode
+3.
+Enter your network SSID and password
+4.
+Click "Apply to device"
+5.
+The ESP32 reboots and joins your network
+6.
+The dashboard connects automatically via WebSocket
+TIPIf the ESP32 and your browser are on the same WiFi, everything works with zero additional configuration.
+Option B — WiFi Hotspot
+
+ESP32 creates its own network. Connect your laptop or phone to it.
+
+1.
+In Settings → Device Connection, choose "WiFi Hotspot"
+2.
+Set a hotspot name (SSID) and optional password
+3.
+Click "Apply to device" — the ESP32 starts broadcasting the network
+4.
+On your laptop/phone, join the ESP32 hotspot from WiFi settings
+5.
+Open the dashboard — the ESP32 is reachable at 192.168.4.1
+NOTEIn hotspot mode you won't have internet on the connected device (unless the ESP32 also bridges it, which this firmware doesn't do). The dashboard still works fully.
+Option C — USB Serial (Desktop App Only)
+
+Direct USB cable from your computer to the ESP32. No WiFi needed.
+
+Requires desktop app
+1.
+Download and run the Gyroscope Monitor desktop app (see Releases in the GitHub repo)
+2.
+Plug the ESP32 into your computer via USB
+3.
+Go to Settings → Serial Device (ESP32)
+4.
+Click Scan — your ESP32 should appear as a COM port
+5.
+Select it, set baud rate to 115200, click Connect
+6.
+Live hardware data starts flowing immediately
+TIPInstall the CP210x or CH340 USB driver if your OS doesn't detect the COM port. Common with cheap clone ESP32 boards.
+Hardware Auto-Detection & Sensor Panels
+When the ESP32 connects via USB, the firmware sends two special startup lines before streaming sensor data. The dashboard reads these to know exactly which sensors are physically present and whether each one initialised successfully. Charts and controls are then shown or hidden automatically — no manual configuration needed.
+
+The two startup lines your firmware must send
+
+DEVICE_INFO:esp32LOGIC|VERSION:1.0|COMPONENTS:MPU6050,ESC,TEMP_SENSOR|BAUD:115200
+HEALTH:MPU6050=OK|ESC=OK|TEMP_SENSOR=FAIL
+
+{"rpm":1500,"tiltX":2.3,"tiltY":-1.1,"temp":42.5,"pwm":75}   ← normal data
+DEVICE_INFO lists the components physically installed. HEALTH reports whether each one initialised without error. Both lines are sent once at startup; data JSON follows continuously at your loop rate (4 Hz recommended).
+
+Arduino setup() code that produces these lines
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);  // let the host-side serial manager open the port
+
+  // ── Step 1: announce which components are installed ──────────────
+  Serial.println(
+    "DEVICE_INFO:esp32LOGIC|VERSION:1.0"
+    "|COMPONENTS:MPU6050,ESC,TEMP_SENSOR"
+    "|BAUD:115200"
+  );
+
+  // ── Step 2: initialise each component, report health ─────────────
+  bool mpu_ok  = initMPU6050();
+  bool esc_ok  = initESC();
+  bool temp_ok = initTempSensor();
+
+  Serial.print("HEALTH:");
+  Serial.print("MPU6050=");   Serial.print(mpu_ok  ? "OK" : "FAIL");
+  Serial.print("|ESC=");      Serial.print(esc_ok  ? "OK" : "FAIL");
+  Serial.print("|TEMP_SENSOR="); Serial.println(temp_ok ? "OK" : "FAIL");
+
+  // ── Step 3: start the main loop ───────────────────────────────────
+}
+Component name → Dashboard panel mapping
+
+Name in COMPONENTS	Dashboard panels affected	Also matches
+MPU6050	Tilt X/Y chart	IMU, GYRO
+ESC	RPM chart, PWM chart, Motor Control	MOTOR, PWM
+TEMP_SENSOR	Temperature chart	TEMP, DS18, NTC
+VIBRATION	Vibration chart	ACCEL, PIEZO
+SD_CARD	SD Card panel (Settings)	SD, SDCARD
+✓ OK
+Sensor healthy
+
+Component is listed in COMPONENTS and reported OK in HEALTH. Panel is fully active.
+
+✗ FAIL
+Sensor init failed
+
+Component is installed but failed to initialise. Check wiring and power. Panel still shows (may read zero).
+
+Sensor offline overlay
+
+Component is not listed in COMPONENTS — it's not physically connected. The panel shows a grey overlay and is inactive. No data is expected from it.
+
+What happens the moment the USB cable is plugged in
+
+1.
+Serial manager detects the port and calls POST /api/serial/connect
+2.
+Server clears stale in-memory readings — charts start fresh
+3.
+Server broadcasts hardware_connected via WebSocket — dashboard flushes its React cache
+4.
+Firmware sends DEVICE_INFO and HEALTH lines within ~1 second
+5.
+Serial manager POSTs the parsed capability map to /api/serial/device-info
+6.
+Server broadcasts hardware_connected again — now with full component info
+7.
+Dashboard panels update: green badges appear, offline overlays show for missing sensors
+8.
+Header shows the device name badge (e.g. esp32LOGIC v1.0)
+WARNINGConnection watchdog: if no sensor reading arrives for 3 seconds while in hardware mode, an amber "Signal lost" banner appears at the top of the dashboard. This usually means the USB cable was unplugged or the ESP32 crashed. Replug to restore.
+Running Your First Session
+1
+Verify the connection
+
+On the Dashboard, check the connectivity chip at the top. It should show Connected with a green dot and your IP address. If it shows Disconnected, go back to the connecting section above.
+
+2
+Check your safety limits
+
+Go to Settings → Safety Limits and confirm the values are safe for your rig:
+
+Max Tilt Angle
+Set to the maximum tilt your mount can physically handle. Default 14°.
+Temp Warning
+Motor manufacturer's continuous operating limit. Default 55°C.
+Temp Critical
+Hard stop threshold. Default 65°C.
+3
+Set your target RPM and duration
+
+Go to Settings → Performance and enter the target flywheel RPM and how long you want the session to run. These become the defaults for every new session.
+
+4
+Start the session
+
+On the Dashboard, click Start Session in the Session Control panel. The motor will spin up to your target RPM. The session timer starts and readings are logged.
+
+WARNINGStay nearby for the first session. If the gyroscope tilts unexpectedly or the motor behaves erratically, click Emergency Stop immediately.
+5
+Monitor live data
+
+Watch the Live Charts panel — tilt X/Y, RPM, and temperature update every second. Stat cards at the top show min/max/average across the session.
+
+6
+End the session
+
+Click Stop Session or let it auto-stop when the duration expires. The session is saved and appears in the Sessions screen for later review.
+
+Dashboard Screen Tour
+Dashboard
+/
+Stat Cards
+Live RPM, tilt X/Y, temperature and motor state. Values update every second from the WebSocket stream.
+Live Charts
+Five sensor panels: RPM, Tilt X/Y, Temperature, Vibration, and Motor PWM. In hardware mode each panel shows a ✓ OK or ✗ FAIL health badge. Sensors not physically present show a grey 'offline' overlay instead of a chart.
+Time Scale toolbar
+Switch chart history window between 30 s, 1 m, 5 m, 15 m, 1 h, 4 h, and 1 d. Zoom in/out with the +/− buttons on each chart.
+Hardware badge
+When an ESP32 is connected via USB the header shows a green badge with the device name and firmware version (e.g. esp32LOGIC v1.0).
+Signal Lost banner
+If no sensor reading arrives for 3 seconds while in hardware mode, an amber banner appears below the header. Replug the USB cable to restore.
+Motor Control
+Send manual commands — Spin, Brake, or Emergency Stop. Use with caution during a running session.
+Session Control
+Start / Stop session, set target RPM and duration, view elapsed time.
+System Terminal
+Real-time event log — shows hardware connection events, sensor health reports, alert triggers, and raw server messages. First place to look when debugging.
+Sessions
+/sessions
+Session list
+All recorded sessions with start time, status badge (running / completed / error), actual duration, and target RPM. Updates every 10 seconds automatically.
+Export all readings
+The 'Export all readings' button in the page header downloads a CSV of every reading across all sessions — useful for offline analysis in Excel or Python.
+Per-session CSV
+Each session row has a CSV download button. It downloads only the readings for that session — handy for comparing individual runs.
+Status badges
+running (green) · completed (blue) · warning (amber) · error (red) · idle (grey). A session stays 'running' until it is explicitly stopped or the target duration expires.
+Predictions
+/predictions
+How it works
+Uses Ordinary Least Squares (OLS) linear regression across all historical session data. Each metric draws a best-fit trend line and projects it forward in time. Requires 2+ completed sessions for real analysis; with 1 session it shows a flat baseline projection.
+Temperature trend
+Plots average and peak temperature per session. The trend line predicts sessions until the 'Temp Warning' threshold (configurable in Settings → Safety). If the slope is downward, it shows 'Cooling trend — no concern'.
+Vibration (ISO 10816-3)
+Vibration is derived from RPM (mm/s = rpm ÷ 14000 × 8.5). ISO zones A, B, C, D are overlaid on the chart. Colour bands show when vibration enters 'monitoring recommended' (C) or 'shutdown advised' (D) territory.
+Wobble magnitude
+Tracks gyroscopic precession — the combination of tilt X and tilt Y angular drift across sessions. A rising slope triggers a 'Gimbal re-alignment recommended' maintenance note.
+RPM stability (CV%)
+Coefficient of Variation = standard deviation ÷ mean RPM, expressed as a percentage. High CV means the motor is inconsistent. Crossing 15% triggers a 'PID retune recommended' alert.
+Maintenance panel
+Auto-generated action items appear in a panel on the right when any metric crosses its threshold. Each item shows urgency, the metric that triggered it, and the recommended action.
+X-axis time unit
+Toggle between sessions, hours, or days on the X-axis using the buttons at the top-right of each chart. Useful when sessions vary significantly in length.
+Settings
+/settings
+Safety Limits & Performance
+The values that govern every session — set these before your first run.
+Device Connection
+WiFi/BLE configuration pushed to the ESP32.
+SD Card Storage
+Sync offline logs from the SD card into the dashboard database.
+Firmware Update
+OTA flash a new .bin without touching a USB cable.
+Troubleshooting
+Dashboard shows Disconnected
+
+Confirm the ESP32 is powered and on the same network. Check the IP in the Arduino Serial Monitor and make sure no firewall blocks port 80. Try refreshing the dashboard.
+
+RPM always shows 0
+
+The motor driver PWM signal may not be reaching GPIO 25, or the driver isn't powered. Check your wiring and that the external motor power supply is on.
+
+Tilt values are stuck or NaN
+
+The MPU-6050 isn't responding. Verify SDA/SCL wiring, check that AD0 is pulled to GND, and confirm you're using 3.3V not 5V on VCC.
+
+SD card not detected
+
+Confirm CS is on GPIO 5 and the card is formatted FAT32. Some SD modules need 5V on VCC — check your breakout's datasheet. Try a different card (some 64GB+ cards aren't FAT32 by default).
+
+Firmware upload fails
+
+Hold the BOOT button on the ESP32 while clicking Upload, release after "Connecting…" appears. If the port isn't detected, install the CP210x or CH340 USB driver for your OS.
+
+OTA firmware flash fails
+
+Ensure the ESP32 has ElegantOTA or AsyncElegantOTA with an /update route. The device must be reachable on the network. Check that the .bin file was compiled for the same board type.
+
+Emergency stop triggered immediately
+
+Your tilt or temperature limits may be too low. Check Settings → Safety Limits. Also verify the MPU-6050 is mounted level — if it's tilted at rest, the reading will be offset.
+
+No COM port appears after scanning (Serial mode)
+
+Install the correct USB serial driver: CP210x for Silicon Labs chips, CH340/CH341 for WCH chips. Replug the cable. Try a different USB cable (some are charge-only with no data lines).
+
+Sensor panel shows a grey 'sensor offline' overlay
+
+The sensor is not listed in the COMPONENTS field of your DEVICE_INFO startup line. Add it (e.g. MPU6050, ESC, TEMP_SENSOR) and reflash. The overlay means the app knows the sensor isn't there — it's working as intended.
+
+Panel shows a ✗ FAIL health badge
+
+The sensor is installed but failed to initialise — your firmware reported FAIL in the HEALTH line. Check wiring and power for that component. The badge is red but the panel still displays (it may read zero until the sensor comes online).
+
+'Signal Lost' amber banner appears on the dashboard
+
+No sensor reading arrived for 3 or more seconds in hardware mode. Usually means the USB cable was unplugged or the ESP32 crashed or halted. Replug the cable — the serial manager will reconnect automatically and the banner will clear.
+
+Charts show old readings after plugging in the ESP32
+
+Stale in-memory readings are cleared automatically on USB connect. If you still see old data, click the browser refresh (F5) or switch time scale to force a fresh fetch.
+
+TIPStill stuck? Open the System Terminal on the Dashboard — it shows raw server logs including WebSocket connection attempts, sensor read errors, and motor command results.
+Motorized Gyroscope Dashboard — Getting Started Guide
+
