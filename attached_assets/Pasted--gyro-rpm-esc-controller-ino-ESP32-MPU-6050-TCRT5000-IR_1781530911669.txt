@@ -1,0 +1,921 @@
+/**
+ * gyro_rpm_esc_controller.ino
+ * ESP32 — MPU-6050 + TCRT5000 IR RPM Sensor + ESC Controller  v3.0
+ *
+ * Wiring:
+ *   MPU-6050  SDA → GPIO 21  |  SCL → GPIO 22  |  VCC → 3.3 V  |  GND → GND
+ *   ESC signal    → GPIO  4
+ *   TCRT5000 DO   → GPIO 16  (digital falling-edge, 1 pulse per revolution)
+ *   Reset button  → GPIO 23  (active LOW, internal pull-up)
+ *   Onboard LED   → GPIO  2  (blinks on each IR pulse)
+ *
+ * NOTE: GPIO 16 is used internally on PSRAM boards (ESP32-WROVER).
+ *       Change TCRT_PIN to another free GPIO if you have PSRAM.
+ *
+ * ── Tilt → Throttle (auto mode) ──────────────────────────────────────────────
+ *   tiltMag = sqrt(errorX² + errorY²)
+ *   tiltMag ≤ TILT_DEAD_DEG  →  motor idles at MIN_THROTTLE
+ *   tiltMag ≥ TILT_MAX_DEG   →  motor runs at MAX_THROTTLE
+ *   between                  →  linear interpolation
+ *   Auto mode is ON by default. Toggle with 'A' key or CMD:AUTO_ON/OFF.
+ *
+ * ── Serial command protocol (from Electron bridge or any host) ───────────────
+ *   Commands are full lines terminated with '\n'.
+ *   CMD:MOTOR_START      start motor
+ *   CMD:MOTOR_STOP       stop motor gracefully
+ *   CMD:EMERGENCY_STOP   immediate ESC disarm
+ *   CMD:SPEED_UP         +MOTOR_SPEED_STEP (manual mode only)
+ *   CMD:SPEED_DOWN       -MOTOR_SPEED_STEP (manual mode only)
+ *   CMD:RESET_REF        zero reference angles
+ *   CMD:AUTO_ON          enable tilt-based auto throttle
+ *   CMD:AUTO_OFF         disable auto throttle
+ *
+ * ── Single-key overrides (Arduino Serial Monitor / any terminal) ─────────────
+ *   Z  reset reference      S  start motor      X  stop motor
+ *   H  throttle up          L  throttle down     A  toggle auto mode
+ *
+ * ── Status messages sent back to host ────────────────────────────────────────
+ *   STATUS:MOTOR=ON | OFF | ESTOP
+ *   STATUS:REF_RESET=OK
+ *   STATUS:AUTO=ON | OFF
+ *   STATUS:CMD_UNKNOWN=<text>
+ *
+ * ── Telemetry line (every TELEMETRY_MS) ──────────────────────────────────────
+ *   Human: "X: .. | Y: .. | Z: .. | Motor: ON | RPM: .. | Throttle: .. | Auto: ON"
+ *   JSON:  {"rpm":..,"tiltX":..,"tiltY":..,"tiltZ":..,"rotationZ":..,"avgTiltMag":..,"pwm":..,"autoMode":true}
+ */
+
+#include <Arduino.h>
+#include <Wire.h>
+#include <math.h>
+#include <ESP32Servo.h>
+
+// ── Pin assignments ───────────────────────────────────────────────────────────
+static const int PIN_ESC = 4;
+static const int PIN_RESET_BTN = 23; // active LOW, internal pull-up
+static const int PIN_TCRT = 16;      // IR sensor — falling edge per revolution
+static const int PIN_LED = 2;        // onboard LED — blinks each IR pulse
+
+// ── MPU-6050 I2C address & registers ─────────────────────────────────────────
+static const uint8_t MPU_ADDR = 0x68;
+static const uint8_t REG_PWR_MGMT1 = 0x6B;
+static const uint8_t REG_ACCEL_CFG = 0x1C;
+static const uint8_t REG_GYRO_CFG = 0x1B;
+static const uint8_t REG_ACCEL_OUT = 0x3B;
+
+// ── ESC / throttle constants ──────────────────────────────────────────────────
+static const int THROTTLE_ARM = 105; // ESC arm / idle value (µs-mapped via servo lib)
+static const int THROTTLE_MIN = 115; // minimum running throttle
+static const int THROTTLE_MAX = 180; // maximum throttle
+static const int THROTTLE_STEP = 5;  // manual speed-up / speed-down step
+
+// ── Tilt-to-throttle mapping thresholds (degrees) ────────────────────────────
+static const float TILT_DEAD = 2.0f;  // below → idle
+static const float TILT_FULL = 30.0f; // above → full throttle
+
+// ── Kalman filter tuning ──────────────────────────────────────────────────────
+static const float KF_Q_ANGLE = 0.001f;
+static const float KF_Q_BIAS = 0.003f;
+static const float KF_R_MEASURE = 0.030f;
+
+// ── Telemetry interval ────────────────────────────────────────────────────────
+static const uint32_t TELEMETRY_MS = 250;
+
+// ── RPM stale-out timeout ─────────────────────────────────────────────────────
+static const uint32_t RPM_TIMEOUT_MS = 2000;
+static const uint32_t RPM_REPORT_INTERVAL_MS = 250; // publish one RPM value at a fixed cadence
+
+// ── Ramp timing ───────────────────────────────────────────────────────────────
+// Single step per call to rampStep(); called every loop iteration when ramping.
+// This keeps the loop non-blocking so the ISR and telemetry keep running.
+static const uint32_t RAMP_STEP_MS = 12; // ms between each throttle increment
+
+// ─────────────────────────────────────────────────────────────────────────────
+// IMU state
+// ─────────────────────────────────────────────────────────────────────────────
+struct KalmanAxis
+{
+  float angle = 0.0f;
+  float bias = 0.0f;
+  float P[2][2] = {{1.0f, 0.0f}, {0.0f, 1.0f}};
+};
+
+static KalmanAxis kfX, kfY, kfZ;
+
+static float accelX_g, accelY_g, accelZ_g;
+static float gyroX_dps, gyroY_dps, gyroZ_dps;
+
+static float currentAngleX = 0.0f, currentAngleY = 0.0f, currentAngleZ = 0.0f;
+static float refAngleX = 0.0f, refAngleY = 0.0f, refAngleZ = 0.0f;
+static float errorX = 0.0f, errorY = 0.0f, errorZ = 0.0f;
+
+static float vibrationRms = 0.0f;
+static const uint8_t VIBRATION_WINDOW = 16;
+static float vibrationWindow[VIBRATION_WINDOW] = {0.0f};
+static uint8_t vibrationIndex = 0;
+static float vibrationSumSquares = 0.0f;
+static uint8_t vibrationSampleCount = 0;
+
+static bool imuInitialized = false; // Kalman seeded
+static bool refSet = false;         // reference angles captured at least once
+
+static uint32_t lastImuMicros = 0;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Motor / ESC state
+// ─────────────────────────────────────────────────────────────────────────────
+static Servo esc;
+static bool motorRunning = false;
+static int throttle = THROTTLE_ARM;
+static bool autoMode = false; // tilt-based throttle is off by default
+
+// Non-blocking ramp state
+static bool ramping = false;
+static int rampTarget = THROTTLE_ARM;
+static uint32_t lastRampMs = 0;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// IR / RPM state  (ISR → loop handoff via volatile)
+// ─────────────────────────────────────────────────────────────────────────────
+static volatile uint32_t isrLastMicros = 0;
+static volatile uint32_t isrPeriodMs = 0; // period of last revolution in ms
+static volatile bool isrPulseReady = false;
+
+// Safe copies read inside loop()
+static uint32_t rpmValue = 0;
+static float rpmFreqHz = 0.0f;
+static uint32_t rpmPeriodMs = 0;
+static uint32_t lastPulseMicrosSnapshot = 0; // for timeout detection
+
+// IR filtering settings
+static const uint32_t IR_DEBOUNCE_US = 2500UL;       // ignore false edges closer than 2.5 ms
+static const uint32_t IR_MIN_PERIOD_US = 2000UL;     // reject unrealistically short periods
+static const uint32_t IR_MAX_PERIOD_US = 10000000UL; // reject periods longer than 10 s
+static const uint8_t RPM_AVG_SAMPLES = 8;
+static uint32_t rpmPeriodBuffer[RPM_AVG_SAMPLES] = {0};
+static uint8_t rpmPeriodWriteIdx = 0;
+static uint8_t rpmPeriodCount = 0;
+static float filteredRpm = 0.0f;
+static float filteredFreqHz = 0.0f;
+static uint32_t lastRpmReportMs = 0;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Telemetry timing
+// ─────────────────────────────────────────────────────────────────────────────
+static uint32_t lastTelemetryMs = 0;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Serial line buffer  (non-blocking CMD: line reader)
+// ─────────────────────────────────────────────────────────────────────────────
+static char serialBuf[64];
+static uint8_t serialLen = 0;
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Utility
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void normalizeAngle(float &a)
+{
+  while (a > 180.0f)
+    a -= 360.0f;
+  while (a < -180.0f)
+    a += 360.0f;
+}
+
+// Clamp-then-map float range
+static float mapClamped(float x, float inLo, float inHi, float outLo, float outHi)
+{
+  if (x <= inLo)
+    return outLo;
+  if (x >= inHi)
+    return outHi;
+  return outLo + (x - inLo) * (outHi - outLo) / (inHi - inLo);
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// IR pulse ISR  — runs in IRAM, keeps work minimal
+// ═════════════════════════════════════════════════════════════════════════════
+
+void IRAM_ATTR irPulseISR()
+{
+  static uint32_t lastAcceptedUs = 0;
+  uint32_t now = micros();
+
+  if (lastAcceptedUs > 0)
+  {
+    uint32_t deltaUs = now - lastAcceptedUs;
+    if (deltaUs < IR_DEBOUNCE_US)
+      return; // ignore bounce / spurious edges
+  }
+
+  lastAcceptedUs = now;
+
+  if (isrLastMicros > 0)
+  {
+    uint32_t periodUs = now - isrLastMicros; // handles micros() rollover
+    if (periodUs >= IR_MIN_PERIOD_US && periodUs <= IR_MAX_PERIOD_US)
+    {
+      uint32_t periodMs = periodUs / 1000UL;
+      if (periodMs > 0)
+        isrPeriodMs = periodMs;
+    }
+  }
+  isrLastMicros = now;
+  isrPulseReady = true;
+  // Toggle LED without reading it first (avoids any potential blocking call)
+  gpio_set_level((gpio_num_t)PIN_LED,
+                 !gpio_get_level((gpio_num_t)PIN_LED));
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Kalman filter  (one axis at a time)
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void kalmanUpdate(KalmanAxis &k, float measuredAngle, float gyroRate, float dt)
+{
+  // Predict
+  float rate = gyroRate - k.bias;
+  k.angle += dt * rate;
+  k.P[0][0] += dt * (dt * k.P[1][1] - k.P[0][1] - k.P[1][0] + KF_Q_ANGLE);
+  k.P[0][1] -= dt * k.P[1][1];
+  k.P[1][0] -= dt * k.P[1][1];
+  k.P[1][1] += KF_Q_BIAS * dt;
+  // Update
+  float S = k.P[0][0] + KF_R_MEASURE;
+  float K0 = k.P[0][0] / S;
+  float K1 = k.P[1][0] / S;
+  float y = measuredAngle - k.angle;
+  k.angle += K0 * y;
+  k.bias += K1 * y;
+  float p00 = k.P[0][0], p01 = k.P[0][1];
+  k.P[0][0] -= K0 * p00;
+  k.P[0][1] -= K0 * p01;
+  k.P[1][0] -= K1 * p00;
+  k.P[1][1] -= K1 * p01;
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// MPU-6050
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void initMPU6050()
+{
+  // Wake the chip
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(REG_PWR_MGMT1);
+  Wire.write(0x00);
+  Wire.endTransmission(true);
+  delay(100);
+
+  // Accel full-scale ±8 g  (register value 0x10)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(REG_ACCEL_CFG);
+  Wire.write(0x10);
+  Wire.endTransmission(true);
+  delay(10);
+
+  // Gyro full-scale ±250 °/s  (register value 0x00)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(REG_GYRO_CFG);
+  Wire.write(0x00);
+  Wire.endTransmission(true);
+  delay(10);
+}
+
+// Returns true if a full 14-byte read succeeded
+static bool readMPU6050()
+{
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(REG_ACCEL_OUT);
+  if (Wire.endTransmission(false) != 0)
+    return false;
+
+  uint8_t got = Wire.requestFrom((uint8_t)MPU_ADDR, (uint8_t)14, (uint8_t)true);
+  if (got < 14)
+    return false;
+
+  int16_t ax = (Wire.read() << 8) | Wire.read();
+  int16_t ay = (Wire.read() << 8) | Wire.read();
+  int16_t az = (Wire.read() << 8) | Wire.read();
+  Wire.read();
+  Wire.read(); // temperature — discard
+  int16_t gx = (Wire.read() << 8) | Wire.read();
+  int16_t gy = (Wire.read() << 8) | Wire.read();
+  int16_t gz = (Wire.read() << 8) | Wire.read();
+
+  // ±8 g scale → 4096 LSB/g
+  accelX_g = ax / 4096.0f;
+  accelY_g = ay / 4096.0f;
+  accelZ_g = az / 4096.0f;
+
+  // ±250 °/s scale → 131 LSB/(°/s)
+  gyroX_dps = gx / 131.0f;
+  gyroY_dps = gy / 131.0f;
+  gyroZ_dps = gz / 131.0f;
+
+  return true;
+}
+
+static void updateVibration();
+
+static void updateAngles()
+{
+  // Tilt angles from accelerometer
+  float aX = atan2f(accelX_g, sqrtf(accelY_g * accelY_g + accelZ_g * accelZ_g)) * RAD_TO_DEG;
+  float aY = atan2f(accelY_g, sqrtf(accelX_g * accelX_g + accelZ_g * accelZ_g)) * RAD_TO_DEG;
+  float aZ = atan2f(accelZ_g, sqrtf(accelX_g * accelX_g + accelY_g * accelY_g)) * RAD_TO_DEG;
+
+  uint32_t nowUs = micros();
+  float dt = (lastImuMicros == 0) ? 0.01f : (float)(nowUs - lastImuMicros) / 1e6f;
+  if (dt <= 0.0f || dt > 0.5f)
+    dt = 0.01f; // clamp runaway dt (e.g. first call)
+  lastImuMicros = nowUs;
+
+  if (!imuInitialized)
+  {
+    kfX.angle = aX;
+    kfY.angle = aY;
+    kfZ.angle = aZ;
+    imuInitialized = true;
+  }
+  else
+  {
+    kalmanUpdate(kfX, aX, gyroX_dps, dt);
+    kalmanUpdate(kfY, aY, gyroY_dps, dt);
+    kalmanUpdate(kfZ, aZ, gyroZ_dps, dt);
+  }
+
+  currentAngleX = kfX.angle;
+  normalizeAngle(currentAngleX);
+  currentAngleY = kfY.angle;
+  normalizeAngle(currentAngleY);
+  currentAngleZ = kfZ.angle;
+  normalizeAngle(currentAngleZ);
+}
+
+static void updateAngleErrors()
+{
+  // Invert X so tilting forward reads positive
+  errorX = -(currentAngleX - refAngleX);
+  errorY = currentAngleY - refAngleY;
+  errorZ = currentAngleZ - refAngleZ;
+  normalizeAngle(errorX);
+  normalizeAngle(errorY);
+  normalizeAngle(errorZ);
+  // Small dead-band to suppress sensor noise at rest
+  if (fabsf(errorX) < 0.4f)
+    errorX = 0.0f;
+  if (fabsf(errorY) < 0.4f)
+    errorY = 0.0f;
+  if (fabsf(errorZ) < 0.4f)
+    errorZ = 0.0f;
+}
+
+static void updateVibration()
+{
+  float magnitude = sqrtf(accelX_g * accelX_g + accelY_g * accelY_g + accelZ_g * accelZ_g);
+  float dynamic = fabsf(magnitude - 1.0f);
+
+  vibrationSumSquares -= vibrationWindow[vibrationIndex] * vibrationWindow[vibrationIndex];
+  vibrationWindow[vibrationIndex] = dynamic;
+  vibrationSumSquares += dynamic * dynamic;
+  vibrationIndex = (vibrationIndex + 1) % VIBRATION_WINDOW;
+
+  if (vibrationSampleCount < VIBRATION_WINDOW)
+    vibrationSampleCount++;
+
+  float count = (float)((vibrationSampleCount < VIBRATION_WINDOW) ? vibrationSampleCount : VIBRATION_WINDOW);
+  vibrationRms = sqrtf(vibrationSumSquares / count);
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Reference angles
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void resetReference()
+{
+  refAngleX = currentAngleX;
+  refAngleY = currentAngleY;
+  refAngleZ = currentAngleZ;
+  errorX = errorY = errorZ = 0.0f;
+  refSet = true;
+  Serial.println("STATUS:REF_RESET=OK");
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Non-blocking throttle ramp
+// ═════════════════════════════════════════════════════════════════════════════
+
+// Call setThrottleTarget() to begin a ramp; call rampStep() every loop iteration.
+static void setThrottleTarget(int target)
+{
+  target = constrain(target, THROTTLE_MIN, THROTTLE_MAX);
+  rampTarget = target;
+  ramping = true;
+  lastRampMs = millis();
+}
+
+static void rampStep()
+{
+  if (!ramping)
+    return;
+  if ((millis() - lastRampMs) < RAMP_STEP_MS)
+    return;
+  lastRampMs = millis();
+
+  if (throttle < rampTarget)
+  {
+    throttle++;
+  }
+  else if (throttle > rampTarget)
+  {
+    throttle--;
+  }
+  else
+  {
+    ramping = false; // reached target
+    return;
+  }
+  esc.write(throttle);
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Motor control
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void resetRPMState();
+
+static void startMotor()
+{
+  if (motorRunning)
+  {
+    Serial.println("STATUS:MOTOR=ON");
+    return;
+  }
+  motorRunning = true;
+  resetRPMState();
+  Serial.println("--- RAMPING MOTOR UP ---");
+  setThrottleTarget(THROTTLE_MIN);
+  Serial.println("STATUS:MOTOR=ON");
+}
+
+static void stopMotor()
+{
+  motorRunning = false;
+  ramping = false;
+  throttle = THROTTLE_ARM;
+  esc.write(THROTTLE_ARM);
+  resetRPMState();
+  Serial.println("STATUS:MOTOR=OFF");
+}
+
+static void emergencyStop()
+{
+  motorRunning = false;
+  ramping = false;
+  throttle = THROTTLE_ARM;
+  esc.write(THROTTLE_ARM);
+  resetRPMState();
+  Serial.println("STATUS:MOTOR=ESTOP");
+  Serial.println("!!! EMERGENCY STOP !!!");
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Auto-throttle  (tilt magnitude → target throttle)
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void applyAutoThrottle()
+{
+  if (!motorRunning || !autoMode || !refSet)
+    return;
+  float tiltMag = sqrtf(errorX * errorX + errorY * errorY);
+  int target = (int)mapClamped(tiltMag, TILT_DEAD, TILT_FULL,
+                               (float)THROTTLE_MIN, (float)THROTTLE_MAX);
+  // Only kick off a new ramp if the target has moved by more than one step
+  if (abs(target - rampTarget) >= THROTTLE_STEP || !ramping)
+  {
+    setThrottleTarget(target);
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// RPM helpers
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void resetRPMState()
+{
+  rpmValue = 0;
+  rpmFreqHz = 0.0f;
+  rpmPeriodMs = 0;
+  filteredRpm = 0.0f;
+  filteredFreqHz = 0.0f;
+  rpmPeriodWriteIdx = 0;
+  rpmPeriodCount = 0;
+  for (uint8_t i = 0; i < RPM_AVG_SAMPLES; i++)
+    rpmPeriodBuffer[i] = 0;
+  lastPulseMicrosSnapshot = 0;
+  noInterrupts();
+  isrPeriodMs = 0;
+  isrPulseReady = false;
+  isrLastMicros = 0;
+  interrupts();
+}
+
+static void publishRPMValue()
+{
+  if (!motorRunning)
+  {
+    if (rpmValue != 0 || rpmFreqHz != 0.0f || rpmPeriodMs != 0 || filteredRpm != 0.0f)
+      resetRPMState();
+    return;
+  }
+
+  if ((millis() - lastRpmReportMs) < RPM_REPORT_INTERVAL_MS)
+    return;
+
+  lastRpmReportMs = millis();
+
+  if (rpmPeriodMs > 0 && filteredRpm > 0.0f)
+  {
+    rpmValue = (uint32_t)filteredRpm;
+    rpmFreqHz = filteredFreqHz;
+  }
+  else
+  {
+    rpmValue = 0;
+    rpmFreqHz = 0.0f;
+  }
+}
+
+static void processRPMPulse()
+{
+  if (!motorRunning || !isrPulseReady)
+    return;
+
+  // Copy volatile data atomically
+  noInterrupts();
+  isrPulseReady = false;
+  uint32_t period = isrPeriodMs;
+  uint32_t stamp = isrLastMicros;
+  interrupts();
+
+  lastPulseMicrosSnapshot = stamp;
+
+  if (period > 0)
+  {
+    rpmPeriodBuffer[rpmPeriodWriteIdx] = period;
+    rpmPeriodWriteIdx = (rpmPeriodWriteIdx + 1) % RPM_AVG_SAMPLES;
+    if (rpmPeriodCount < RPM_AVG_SAMPLES)
+      rpmPeriodCount++;
+
+    uint32_t sumPeriods = 0;
+    uint8_t count = rpmPeriodCount;
+    for (uint8_t i = 0; i < count; i++)
+    {
+      uint8_t idx = (rpmPeriodWriteIdx + RPM_AVG_SAMPLES - 1 - i) % RPM_AVG_SAMPLES;
+      sumPeriods += rpmPeriodBuffer[idx];
+    }
+
+    rpmPeriodMs = sumPeriods / count;
+    if (rpmPeriodMs > 0)
+    {
+      float candidateRpm = 60000.0f / (float)rpmPeriodMs;
+      float candidateFreq = 1000.0f / (float)rpmPeriodMs;
+
+      if (filteredRpm <= 0.0f)
+      {
+        filteredRpm = candidateRpm;
+        filteredFreqHz = candidateFreq;
+      }
+      else
+      {
+        filteredRpm = filteredRpm * 0.75f + candidateRpm * 0.25f;
+        filteredFreqHz = filteredFreqHz * 0.75f + candidateFreq * 0.25f;
+      }
+    }
+  }
+}
+
+static void checkRPMTimeout()
+{
+  if (!motorRunning || lastPulseMicrosSnapshot == 0)
+    return;
+  uint32_t elapsedMs = (micros() - lastPulseMicrosSnapshot) / 1000UL;
+  if (elapsedMs > RPM_TIMEOUT_MS)
+  {
+    rpmValue = 0;
+    rpmFreqHz = 0.0f;
+    rpmPeriodMs = 0;
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Serial command handling
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void handleCommand(const char *cmd)
+{
+  if (strcmp(cmd, "CMD:MOTOR_START") == 0)
+  {
+    startMotor();
+  }
+  else if (strcmp(cmd, "CMD:MOTOR_STOP") == 0)
+  {
+    stopMotor();
+  }
+  else if (strcmp(cmd, "CMD:EMERGENCY_STOP") == 0)
+  {
+    emergencyStop();
+  }
+  else if (strcmp(cmd, "CMD:RESET_REF") == 0)
+  {
+    resetReference();
+  }
+  else if (strcmp(cmd, "CMD:AUTO_ON") == 0)
+  {
+    autoMode = true;
+    Serial.println("STATUS:AUTO=ON");
+  }
+  else if (strcmp(cmd, "CMD:AUTO_OFF") == 0)
+  {
+    autoMode = false;
+    Serial.println("STATUS:AUTO=OFF");
+  }
+  else if (strcmp(cmd, "CMD:SPEED_UP") == 0)
+  {
+    if (!motorRunning)
+      return;
+    if (autoMode)
+    {
+      Serial.println("[INFO] SPEED_UP ignored — auto mode ON");
+      return;
+    }
+    setThrottleTarget(throttle + THROTTLE_STEP);
+  }
+  else if (strcmp(cmd, "CMD:SPEED_DOWN") == 0)
+  {
+    if (!motorRunning)
+      return;
+    if (autoMode)
+    {
+      Serial.println("[INFO] SPEED_DOWN ignored — auto mode ON");
+      return;
+    }
+    setThrottleTarget(throttle - THROTTLE_STEP);
+  }
+  else
+  {
+    Serial.print("STATUS:CMD_UNKNOWN=");
+    Serial.println(cmd);
+  }
+}
+
+static void handleKey(char c)
+{
+  switch (c)
+  {
+  case 'Z':
+  case 'z':
+    Serial.println("[Key] Reset reference");
+    resetReference();
+    break;
+  case 'S':
+  case 's':
+    Serial.println("[Key] Start motor");
+    startMotor();
+    break;
+  case 'X':
+  case 'x':
+    Serial.println("[Key] Stop motor");
+    stopMotor();
+    break;
+  case 'H':
+  case 'h':
+    if (!motorRunning)
+    {
+      Serial.println("[Key] Speed up ignored (motor off)");
+    }
+    else
+    {
+      Serial.println("[Key] Speed up");
+      setThrottleTarget(throttle + THROTTLE_STEP);
+    }
+    break;
+  case 'L':
+  case 'l':
+    if (!motorRunning)
+    {
+      Serial.println("[Key] Speed down ignored (motor off)");
+    }
+    else
+    {
+      Serial.println("[Key] Speed down");
+      setThrottleTarget(throttle - THROTTLE_STEP);
+    }
+    break;
+  case 'A':
+  case 'a':
+    autoMode = !autoMode;
+    Serial.println(autoMode ? "STATUS:AUTO=ON" : "STATUS:AUTO=OFF");
+    break;
+  default:
+    Serial.printf("[Key] Unknown: '%c'\n", c);
+    break;
+  }
+}
+
+// Non-blocking byte-by-byte serial reader.
+// Accumulates characters into serialBuf until '\n', then dispatches.
+static void pollSerial()
+{
+  while (Serial.available() > 0)
+  {
+    char c = (char)Serial.read();
+    if (c == '\r')
+      continue;
+    if (c == '\n')
+    {
+      serialBuf[serialLen] = '\0';
+      if (serialLen > 0)
+      {
+        if (strncmp(serialBuf, "CMD:", 4) == 0)
+        {
+          handleCommand(serialBuf);
+        }
+        else if (serialLen == 1)
+        {
+          handleKey(serialBuf[0]);
+        }
+        else
+        {
+          Serial.printf("[Serial] Unknown input: %s\n", serialBuf);
+        }
+      }
+      serialLen = 0;
+    }
+    else
+    {
+      // Single characters typed without Enter (Serial Monitor "No line ending")
+      // are dispatched immediately so keyboard shortcuts still work.
+      if (serialLen == 0 && Serial.available() == 0)
+      {
+        handleKey(c);
+      }
+      else
+      {
+        if (serialLen < (uint8_t)(sizeof(serialBuf) - 1))
+        {
+          serialBuf[serialLen++] = c;
+        }
+      }
+    }
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Telemetry
+// ═════════════════════════════════════════════════════════════════════════════
+
+static void sendTelemetry()
+{
+  float tiltMag = sqrtf(errorX * errorX + errorY * errorY);
+  float pwmPct = 0.0f;
+  if (throttle > THROTTLE_ARM)
+  {
+    pwmPct = (float)(throttle - THROTTLE_ARM) /
+             (float)(THROTTLE_MAX - THROTTLE_ARM) * 100.0f;
+  }
+
+  // Human-readable line for terminal viewing
+  Serial.printf("RPM: %lu | Tilt: %.1f/%.1f/%.1f | Vib: %.3f g RMS | PWM: %.2f | Auto: %s\n",
+                rpmValue, errorX, errorY, errorZ, vibrationRms,
+                pwmPct, autoMode ? "ON" : "OFF");
+
+  // JSON for companion app
+  Serial.printf("{\"rpm\":%lu,\"tiltX\":%.1f,\"tiltY\":%.1f,\"tiltZ\":%.1f,"
+                "\"rotationZ\":%.2f,\"avgTiltMag\":%.2f,\"temp\":25.0,"
+                "\"pwm\":%.2f,\"vibration\":%.3f,\"autoMode\":%s}\n",
+                rpmValue, errorX, errorY, errorZ,
+                gyroZ_dps, tiltMag, pwmPct, vibrationRms,
+                autoMode ? "true" : "false");
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// setup
+// ═════════════════════════════════════════════════════════════════════════════
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(200); // let the USB-serial bridge settle
+
+  // ── Boot banner / app handshake ──────────────────────────────────────────
+  Serial.println("DEVICE_INFO:esp32|VERSION:3.0|COMPONENTS:MPU6050,TCRT5000|BAUD:115200");
+  Serial.println("HEALTH:BOOT=OK");
+  Serial.println("{\"status\":\"boot\",\"msg\":\"Gyro+RPM+ESC v3.0\"}");
+  Serial.println();
+  Serial.println("==============================================");
+  Serial.println("  ESP32 IMU + RPM + ESC CONTROLLER  v3.0");
+  Serial.println("==============================================");
+  Serial.println("Auto-throttle OFF by default: use 'A' to enable tilt-based throttle");
+  Serial.println("Keys: Z=Ref  S=Start  X=Stop  H=Up  L=Down  A=Auto");
+  Serial.println("CMDs: CMD:MOTOR_START / STOP / EMERGENCY_STOP");
+  Serial.println("      CMD:SPEED_UP / SPEED_DOWN / RESET_REF");
+  Serial.println("      CMD:AUTO_ON / AUTO_OFF");
+  Serial.println("==============================================");
+  Serial.println();
+
+  // ── GPIO ─────────────────────────────────────────────────────────────────
+  pinMode(PIN_RESET_BTN, INPUT_PULLUP);
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
+  pinMode(PIN_TCRT, INPUT);
+
+  // ── IR interrupt ──────────────────────────────────────────────────────────
+  attachInterrupt(digitalPinToInterrupt(PIN_TCRT), irPulseISR, FALLING);
+
+  // ── I2C + IMU ─────────────────────────────────────────────────────────────
+  Wire.begin(21, 22);    // SDA=21, SCL=22 (standard ESP32 devkit pins)
+  Wire.setClock(400000); // 400 kHz fast mode
+  initMPU6050();
+
+  // ── ESC setup ─────────────────────────────────────────────────────────────
+  // Allocate all four hardware timers so ESP32Servo has plenty to choose from.
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
+  esc.setPeriodHertz(50);          // standard 50 Hz servo/ESC PWM
+  esc.attach(PIN_ESC, 1000, 2000); // 1000–2000 µs pulse range
+
+  Serial.println("Arming ESC (3 s) ...");
+  esc.write(THROTTLE_ARM);
+  delay(3000);
+  Serial.println("ESC armed.");
+  Serial.println("STATUS:MOTOR=OFF");
+  Serial.println("STATUS:AUTO=OFF");
+
+  lastTelemetryMs = millis();
+  lastRpmReportMs = millis();
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// loop
+// ═════════════════════════════════════════════════════════════════════════════
+
+void loop()
+{
+  // ── Hardware reset button (debounced, blocking 50 ms is acceptable here) ──
+  if (digitalRead(PIN_RESET_BTN) == LOW)
+  {
+    delay(50);
+    if (digitalRead(PIN_RESET_BTN) == LOW)
+    {
+      Serial.println("[Button] Reset reference");
+      resetReference();
+      delay(300); // prevent re-trigger while finger is still on button
+    }
+  }
+
+  // ── Serial input ──────────────────────────────────────────────────────────
+  pollSerial();
+
+  // ── IMU read + Kalman update ──────────────────────────────────────────────
+  if (readMPU6050())
+  {
+    updateAngles();
+    updateVibration();
+    if (refSet)
+      updateAngleErrors();
+  }
+
+  // ── RPM processing ────────────────────────────────────────────────────────
+  processRPMPulse();
+  checkRPMTimeout();
+  publishRPMValue();
+
+  // ── Auto-throttle ─────────────────────────────────────────────────────────
+  applyAutoThrottle();
+
+  // ── Non-blocking throttle ramp step ───────────────────────────────────────
+  if (motorRunning)
+  {
+    rampStep();
+  }
+  else
+  {
+    // Keep ESC armed when motor is not running
+    if (throttle != THROTTLE_ARM)
+    {
+      throttle = THROTTLE_ARM;
+      esc.write(THROTTLE_ARM);
+    }
+  }
+
+  // ── Telemetry ─────────────────────────────────────────────────────────────
+  if ((millis() - lastTelemetryMs) >= TELEMETRY_MS)
+  {
+    lastTelemetryMs = millis();
+    sendTelemetry();
+  }
+}

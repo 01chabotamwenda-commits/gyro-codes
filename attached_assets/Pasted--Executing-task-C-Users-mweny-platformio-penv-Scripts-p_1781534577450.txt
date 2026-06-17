@@ -1,0 +1,380 @@
+ *  Executing task: C:\Users\mweny\.platformio\penv\Scripts\platformio.exe device monitor --port COM4 
+
+--- Terminal on COM4 | 115200 8-N-1
+--- Available filters and text transformations: debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+DEVICE_INFO:esp32|VERSION:3.0|COMPONENTS:MPU6050,TCRT5000|BAUD:115200
+HEALTH:BOOT=OK
+{"status":"boot","msg":"Gyro+RPM+ESC v3.0"}
+
+==============================================
+  ESP32 IMU + RPM + ESC CONTROLLER  v3.0
+==============================================
+Auto-throttle OFF by default: use 'A' to enable
+Keys: Z=Ref  S=Start  X=Stop  H=Up  L=Down  A=Auto
+CMDs: CMD:MOTOR_START / STOP / EMERGENCY_STOP
+      CMD:SPEED_UP / SPEED_DOWN / RESET_REF
+      CMD:AUTO_ON / AUTO_OFF
+==============================================
+
+Arming ESC (3 s) ...
+ESC armed.
+STATUS:MOTOR=OFF
+STATUS:AUTO=OFF
+STATUS:REF_RESET=OK
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.029 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.60,"avgTiltMag":0.00,"temp":25.0,"pwm":0.00,"vibration":0.029,"autoMode":false}
+RPM: 0 | Tilt: -0.5/0.0/-0.5 | Vib: 0.028 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.64,"avgTiltMag":0.49,"temp":25.0,"pwm":0.00,"vibration":0.028,"autoMode":false}
+RPM: 0 | Tilt: -0.6/0.0/-0.6 | Vib: 0.027 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":-0.6,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-1.31,"avgTiltMag":0.57,"temp":25.0,"pwm":0.00,"vibration":0.027,"autoMode":false}
+RPM: 0 | Tilt: -0.6/0.0/-0.6 | Vib: 0.027 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":-0.6,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-1.83,"avgTiltMag":0.59,"temp":25.0,"pwm":0.00,"vibration":0.027,"autoMode":false}
+RPM: 0 | Tilt: -0.5/0.0/-0.5 | Vib: 0.026 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.60,"avgTiltMag":0.47,"temp":25.0,"pwm":0.00,"vibration":0.026,"autoMode":false}
+RPM: 0 | Tilt: -0.5/0.0/-0.5 | Vib: 0.030 g RMS | PWM: 0.00 | Auto: OFF
+{"rpm":0,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.67,"avgTiltMag":0.52,"temp":25.0,"pwm":0.00,"vibration":0.030,"autoMode":false}
+[Key] Start motor
+--- RAMPING MOTOR UP ---
+STATUS:MOTOR=ON
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":false}
+RPM: 15384 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":15384,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.60,"avgTiltMag":0.50,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 14867 | Tilt: -0.5/0.0/-0.5 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":14867,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.76,"avgTiltMag":0.46,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":false}
+RPM: 7432 | Tilt: -0.5/0.0/-0.5 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":7432,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.65,"avgTiltMag":0.50,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+RPM: 6667 | Tilt: -0.5/0.0/-0.5 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6667,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.60,"avgTiltMag":0.49,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":false}
+RPM: 6666 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.52,"avgTiltMag":0.49,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 10535 | Tilt: -0.5/0.0/-0.5 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10535,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.77,"avgTiltMag":0.53,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+RPM: 10648 | Tilt: -0.5/0.0/-0.5 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10648,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.58,"avgTiltMag":0.49,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":false}
+RPM: 10536 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10536,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.56,"avgTiltMag":0.50,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 10402 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10402,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.69,"avgTiltMag":0.45,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 11111 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":11111,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.49,"avgTiltMag":0.51,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 10402 | Tilt: -0.5/0.0/-0.5 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10402,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.61,"avgTiltMag":0.51,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":false}
+RPM: 11111 | Tilt: -0.4/0.0/-0.4 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":11111,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.37,"avgTiltMag":0.42,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":false}
+RPM: 10027 | Tilt: -0.6/0.0/-0.6 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10027,"tiltX":-0.6,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-1.79,"avgTiltMag":0.55,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+RPM: 10000 | Tilt: -0.5/0.0/-0.5 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10000,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.56,"avgTiltMag":0.46,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+[  8874][E][Wire.cpp:499] requestFrom(): i2cWriteReadNonStop returned Error -1
+RPM: 10000 | Tilt: -0.5/0.0/-0.5 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10000,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.56,"avgTiltMag":0.48,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":false}
+RPM: 10000 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10000,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.67,"avgTiltMag":0.54,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+[Key] Speed up
+RPM: 10000 | Tilt: -0.5/0.0/-0.5 | Vib: 0.031 g RMS | PWM: 17.33 | Auto: OFF
+{"rpm":10000,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.72,"avgTiltMag":0.51,"temp":25.0,"pwm":17.33,"vibration":0.031,"autoMode":false}
+RPM: 10019 | Tilt: -0.5/0.0/-0.5 | Vib: 0.026 g RMS | PWM: 20.00 | Auto: OFF
+{"rpm":10019,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.67,"avgTiltMag":0.53,"temp":25.0,"pwm":20.00,"vibration":0.026,"autoMode":false}
+[Key] Speed up
+[Key] Speed up
+RPM: 10536 | Tilt: -0.5/0.0/-0.5 | Vib: 0.030 g RMS | PWM: 24.00 | Auto: OFF
+{"rpm":10536,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.68,"avgTiltMag":0.49,"temp":25.0,"pwm":24.00,"vibration":0.030,"autoMode":false}
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[ 10123][E][Wire.cpp:499] requestFrom(): i2cWriteReadNonStop returned Error 263
+[Key] Speed up
+RPM: 11061 | Tilt: -0.5/0.0/-0.5 | Vib: 0.030 g RMS | PWM: 45.33 | Auto: OFF
+{"rpm":11061,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.44,"avgTiltMag":0.47,"temp":25.0,"pwm":45.33,"vibration":0.030,"autoMode":false}
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+RPM: 10536 | Tilt: -0.5/0.0/-0.5 | Vib: 0.028 g RMS | PWM: 65.33 | Auto: OFF
+{"rpm":10536,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.45,"avgTiltMag":0.48,"temp":25.0,"pwm":65.33,"vibration":0.028,"autoMode":false}
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+RPM: 10482 | Tilt: -0.4/0.0/-0.5 | Vib: 0.048 g RMS | PWM: 88.00 | Auto: OFF
+{"rpm":10482,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.46,"avgTiltMag":0.43,"temp":25.0,"pwm":88.00,"vibration":0.048,"autoMode":false}
+[Key] Speed up
+[Key] Speed up
+[Key] Speed up
+RPM: 10536 | Tilt: 0.0/0.0/-0.5 | Vib: 0.051 g RMS | PWM: 100.00 | Auto: OFF
+{"rpm":10536,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.77,"avgTiltMag":0.00,"temp":25.0,"pwm":100.00,"vibration":0.051,"autoMode":false}
+RPM: 10648 | Tilt: 0.0/0.0/-0.5 | Vib: 0.053 g RMS | PWM: 100.00 | Auto: OFF
+{"rpm":10648,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-0.81,"avgTiltMag":0.00,"temp":25.0,"pwm":100.00,"vibration":0.053,"autoMode":false}
+RPM: 6699 | Tilt: 0.0/0.0/-0.5 | Vib: 0.046 g RMS | PWM: 100.00 | Auto: OFF
+{"rpm":6699,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.02,"avgTiltMag":0.00,"temp":25.0,"pwm":100.00,"vibration":0.046,"autoMode":false}
+[Key] Speed down
+RPM: 6666 | Tilt: 0.0/0.0/0.0 | Vib: 0.057 g RMS | PWM: 100.00 | Auto: OFF
+{"rpm":6666,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.34,"avgTiltMag":0.00,"temp":25.0,"pwm":100.00,"vibration":0.057,"autoMode":false}
+[Key] Speed down
+RPM: 7095 | Tilt: 0.0/0.0/-0.5 | Vib: 0.054 g RMS | PWM: 86.67 | Auto: OFF
+{"rpm":7095,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-2.42,"avgTiltMag":0.00,"temp":25.0,"pwm":86.67,"vibration":0.054,"autoMode":false}
+RPM: 10643 | Tilt: 0.0/0.0/0.0 | Vib: 0.047 g RMS | PWM: 86.67 | Auto: OFF
+{"rpm":10643,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.32,"avgTiltMag":0.00,"temp":25.0,"pwm":86.67,"vibration":0.047,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 11111 | Tilt: 0.0/0.0/-0.4 | Vib: 0.044 g RMS | PWM: 78.67 | Auto: OFF
+{"rpm":11111,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.19,"avgTiltMag":0.00,"temp":25.0,"pwm":78.67,"vibration":0.044,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 10402 | Tilt: 0.0/0.0/-0.5 | Vib: 0.039 g RMS | PWM: 56.00 | Auto: OFF
+{"rpm":10402,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.18,"avgTiltMag":0.00,"temp":25.0,"pwm":56.00,"vibration":0.039,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 11111 | Tilt: 0.0/0.0/-0.5 | Vib: 0.059 g RMS | PWM: 34.67 | Auto: OFF
+{"rpm":11111,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.18,"avgTiltMag":0.00,"temp":25.0,"pwm":34.67,"vibration":0.059,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 10864 | Tilt: 0.0/0.0/0.0 | Vib: 0.031 g RMS | PWM: 16.00 | Auto: OFF
+{"rpm":10864,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.68,"avgTiltMag":0.00,"temp":25.0,"pwm":16.00,"vibration":0.031,"autoMode":false}
+RPM: 11052 | Tilt: 0.0/0.0/-0.4 | Vib: 0.040 g RMS | PWM: 16.00 | Auto: OFF
+{"rpm":11052,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.61,"avgTiltMag":0.00,"temp":25.0,"pwm":16.00,"vibration":0.040,"autoMode":false}
+RPM: 10036 | Tilt: -0.4/0.0/-0.5 | Vib: 0.034 g RMS | PWM: 16.00 | Auto: OFF
+{"rpm":10036,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.64,"avgTiltMag":0.44,"temp":25.0,"pwm":16.00,"vibration":0.034,"autoMode":false}
+RPM: 15384 | Tilt: -0.5/0.0/-0.5 | Vib: 0.034 g RMS | PWM: 16.00 | Auto: OFF
+{"rpm":15384,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.53,"avgTiltMag":0.48,"temp":25.0,"pwm":16.00,"vibration":0.034,"autoMode":false}
+[Key] Speed down
+RPM: 14589 | Tilt: 0.0/0.0/-0.4 | Vib: 0.056 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":14589,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.83,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.056,"autoMode":false}
+[Key] Speed down
+RPM: 6731 | Tilt: -0.4/0.0/-0.5 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6731,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.45,"avgTiltMag":0.43,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":false}
+RPM: 6666 | Tilt: -0.5/0.0/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.40,"avgTiltMag":0.47,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+RPM: 10646 | Tilt: 0.0/0.0/-0.4 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10646,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.34,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+RPM: 10536 | Tilt: -0.4/0.0/-0.4 | Vib: 0.036 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10536,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.68,"avgTiltMag":0.43,"temp":25.0,"pwm":13.33,"vibration":0.036,"autoMode":false}
+RPM: 10648 | Tilt: -0.4/0.0/-0.4 | Vib: 0.035 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10648,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.74,"avgTiltMag":0.42,"temp":25.0,"pwm":13.33,"vibration":0.035,"autoMode":false}
+RPM: 11111 | Tilt: -0.5/0.0/-0.5 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":11111,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.56,"avgTiltMag":0.48,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":false}
+RPM: 10402 | Tilt: -0.5/0.0/-0.5 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":10402,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.63,"avgTiltMag":0.45,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":false}
+RPM: 6675 | Tilt: -0.5/0.0/-0.5 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6675,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.40,"avgTiltMag":0.48,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":false}
+RPM: 6666 | Tilt: -0.5/0.0/-0.5 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.55,"avgTiltMag":0.46,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":false}
+RPM: 6666 | Tilt: 0.0/0.0/0.0 | Vib: 0.037 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.67,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.037,"autoMode":false}
+RPM: 6666 | Tilt: -0.4/0.0/-0.5 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.5,"rotationZ":-1.57,"avgTiltMag":0.44,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":false}
+RPM: 6666 | Tilt: -0.6/0.0/-0.6 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: OFF
+{"rpm":6666,"tiltX":-0.6,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-1.79,"avgTiltMag":0.63,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":false}
+STATUS:AUTO=ON
+RPM: 6666 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.21,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.025,"autoMode":true}
+RPM: 6638 | Tilt: 0.0/0.0/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6638,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.64,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.58,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.025,"autoMode":true}
+RPM: 6666 | Tilt: -0.4/0.0/-0.4 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.53,"avgTiltMag":0.41,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: -0.4/0.0/-0.4 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.63,"avgTiltMag":0.41,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 3969 | Tilt: 0.0/0.0/-0.4 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":3969,"tiltX":0.0,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.64,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 4603 | Tilt: 0.0/0.0/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":4603,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.73,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 6665 | Tilt: -0.4/0.0/-0.4 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6665,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.75,"avgTiltMag":0.41,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.0/0.0 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.00,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 9455 | Tilt: -0.4/0.0/-0.4 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9455,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.4,"rotationZ":-1.60,"avgTiltMag":0.41,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 10018 | Tilt: -0.4/0.0/-0.6 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10018,"tiltX":-0.4,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-2.21,"avgTiltMag":0.42,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 10599 | Tilt: -0.5/0.0/-0.6 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10599,"tiltX":-0.5,"tiltY":0.0,"tiltZ":-0.6,"rotationZ":-2.08,"avgTiltMag":0.47,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":true}
+RPM: 10000 | Tilt: -0.8/0.0/-0.7 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":-0.8,"tiltY":0.0,"tiltZ":-0.7,"rotationZ":-4.13,"avgTiltMag":0.83,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 10004 | Tilt: -5.1/-6.9/-6.9 | Vib: 0.012 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10004,"tiltX":-5.1,"tiltY":-6.9,"tiltZ":-6.9,"rotationZ":1.11,"avgTiltMag":8.57,"temp":25.0,"pwm":13.33,"vibration":0.012,"autoMode":true}
+RPM: 11061 | Tilt: 13.0/-6.8/-33.4 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":11061,"tiltX":13.0,"tiltY":-6.8,"tiltZ":-33.4,"rotationZ":-5.24,"avgTiltMag":14.65,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 7010 | Tilt: 30.4/0.0/-50.1 | Vib: 0.017 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7010,"tiltX":30.4,"tiltY":0.0,"tiltZ":-50.1,"rotationZ":1.09,"avgTiltMag":30.38,"temp":25.0,"pwm":13.33,"vibration":0.017,"autoMode":true}
+RPM: 6666 | Tilt: 38.1/2.9/-57.6 | Vib: 0.004 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":38.1,"tiltY":2.9,"tiltZ":-57.6,"rotationZ":-1.64,"avgTiltMag":38.20,"temp":25.0,"pwm":13.33,"vibration":0.004,"autoMode":true}
+RPM: 10531 | Tilt: 44.1/2.0/-63.1 | Vib: 0.004 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10531,"tiltX":44.1,"tiltY":2.0,"tiltZ":-63.1,"rotationZ":-1.82,"avgTiltMag":44.14,"temp":25.0,"pwm":13.33,"vibration":0.004,"autoMode":true}
+RPM: 10719 | Tilt: 47.3/2.6/-66.3 | Vib: 0.010 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10719,"tiltX":47.3,"tiltY":2.6,"tiltZ":-66.3,"rotationZ":-1.27,"avgTiltMag":47.33,"temp":25.0,"pwm":13.33,"vibration":0.010,"autoMode":true}
+RPM: 12785 | Tilt: 45.6/2.3/-64.6 | Vib: 0.004 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":12785,"tiltX":45.6,"tiltY":2.3,"tiltZ":-64.6,"rotationZ":-0.82,"avgTiltMag":45.63,"temp":25.0,"pwm":13.33,"vibration":0.004,"autoMode":true}
+RPM: 13636 | Tilt: 24.5/13.7/-43.5 | Vib: 0.036 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":13636,"tiltX":24.5,"tiltY":13.7,"tiltZ":-43.5,"rotationZ":-3.26,"avgTiltMag":28.08,"temp":25.0,"pwm":13.33,"vibration":0.036,"autoMode":true}
+RPM: 6845 | Tilt: 3.4/8.1/-6.2 | Vib: 0.257 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6845,"tiltX":3.4,"tiltY":8.1,"tiltZ":-6.2,"rotationZ":-0.58,"avgTiltMag":8.76,"temp":25.0,"pwm":13.33,"vibration":0.257,"autoMode":true}
+RPM: 6666 | Tilt: -3.1/-4.1/4.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-3.1,"tiltY":-4.1,"tiltZ":4.5,"rotationZ":-1.72,"avgTiltMag":5.14,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 6666 | Tilt: -2.7/-3.6/4.2 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-2.7,"tiltY":-3.6,"tiltZ":4.2,"rotationZ":-1.37,"avgTiltMag":4.54,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 6666 | Tilt: -1.3/-2.5/3.5 | Vib: 0.129 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-1.3,"tiltY":-2.5,"tiltZ":3.5,"rotationZ":-0.97,"avgTiltMag":2.77,"temp":25.0,"pwm":13.33,"vibration":0.129,"autoMode":true}
+RPM: 6666 | Tilt: -2.2/-10.2/-14.8 | Vib: 0.014 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-2.2,"tiltY":-10.2,"tiltZ":-14.8,"rotationZ":-10.73,"avgTiltMag":10.46,"temp":25.0,"pwm":13.33,"vibration":0.014,"autoMode":true}
+RPM: 6666 | Tilt: 30.2/-5.9/-52.4 | Vib: 0.008 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":30.2,"tiltY":-5.9,"tiltZ":-52.4,"rotationZ":-8.56,"avgTiltMag":30.73,"temp":25.0,"pwm":13.33,"vibration":0.008,"autoMode":true}
+RPM: 12162 | Tilt: 42.9/4.3/-61.8 | Vib: 0.004 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":12162,"tiltX":42.9,"tiltY":4.3,"tiltZ":-61.8,"rotationZ":-2.39,"avgTiltMag":43.14,"temp":25.0,"pwm":13.33,"vibration":0.004,"autoMode":true}
+RPM: 10035 | Tilt: 21.3/18.9/-39.2 | Vib: 0.011 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10035,"tiltX":21.3,"tiltY":18.9,"tiltZ":-39.2,"rotationZ":9.87,"avgTiltMag":28.45,"temp":25.0,"pwm":13.33,"vibration":0.011,"autoMode":true}
+RPM: 6682 | Tilt: -1.0/6.9/-2.7 | Vib: 0.037 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6682,"tiltX":-1.0,"tiltY":6.9,"tiltZ":-2.7,"rotationZ":-5.96,"avgTiltMag":6.96,"temp":25.0,"pwm":13.33,"vibration":0.037,"autoMode":true}
+RPM: 6666 | Tilt: -3.0/-2.5/2.4 | Vib: 0.019 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-3.0,"tiltY":-2.5,"tiltZ":2.4,"rotationZ":-2.15,"avgTiltMag":3.92,"temp":25.0,"pwm":13.33,"vibration":0.019,"autoMode":true}
+RPM: 4659 | Tilt: -2.2/-1.9/2.6 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":4659,"tiltX":-2.2,"tiltY":-1.9,"tiltZ":2.6,"rotationZ":-1.49,"avgTiltMag":2.94,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 3125 | Tilt: 9.5/5.3/11.7 | Vib: 0.015 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":3125,"tiltX":9.5,"tiltY":5.3,"tiltZ":11.7,"rotationZ":-11.15,"avgTiltMag":10.87,"temp":25.0,"pwm":13.33,"vibration":0.015,"autoMode":true}
+RPM: 6657 | Tilt: 29.1/2.5/31.2 | Vib: 0.024 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6657,"tiltX":29.1,"tiltY":2.5,"tiltZ":31.2,"rotationZ":-1.27,"avgTiltMag":29.24,"temp":25.0,"pwm":13.33,"vibration":0.024,"autoMode":true}
+RPM: 6666 | Tilt: 39.7/-6.2/41.6 | Vib: 0.062 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":39.7,"tiltY":-6.2,"tiltZ":41.6,"rotationZ":-9.43,"avgTiltMag":40.22,"temp":25.0,"pwm":13.33,"vibration":0.062,"autoMode":true}
+[ 25983][E][Wire.cpp:499] requestFrom(): i2cWriteReadNonStop returned Error -1
+RPM: 6666 | Tilt: 6.2/-6.6/4.9 | Vib: 0.025 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":6.2,"tiltY":-6.6,"tiltZ":4.9,"rotationZ":0.31,"avgTiltMag":9.04,"temp":25.0,"pwm":13.33,"vibration":0.025,"autoMode":true}
+RPM: 6666 | Tilt: -2.0/2.1/-1.6 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-2.0,"tiltY":2.1,"tiltZ":-1.6,"rotationZ":-1.28,"avgTiltMag":2.90,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 7674 | Tilt: -1.9/-4.4/4.7 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7674,"tiltX":-1.9,"tiltY":-4.4,"tiltZ":4.7,"rotationZ":128.47,"avgTiltMag":4.75,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 10005 | Tilt: 7.6/-15.7/-12.4 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10005,"tiltX":7.6,"tiltY":-15.7,"tiltZ":-12.4,"rotationZ":10.45,"avgTiltMag":17.43,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 10000 | Tilt: 13.7/-22.4/-13.4 | Vib: 0.025 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":13.7,"tiltY":-22.4,"tiltZ":-13.4,"rotationZ":27.56,"avgTiltMag":26.26,"temp":25.0,"pwm":13.33,"vibration":0.025,"autoMode":true}
+RPM: 10008 | Tilt: 12.1/-5.2/-16.4 | Vib: 0.055 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10008,"tiltX":12.1,"tiltY":-5.2,"tiltZ":-16.4,"rotationZ":-2.48,"avgTiltMag":13.23,"temp":25.0,"pwm":13.33,"vibration":0.055,"autoMode":true}
+RPM: 7032 | Tilt: 3.2/8.9/1.8 | Vib: 0.087 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7032,"tiltX":3.2,"tiltY":8.9,"tiltZ":1.8,"rotationZ":-11.28,"avgTiltMag":9.46,"temp":25.0,"pwm":13.33,"vibration":0.087,"autoMode":true}
+RPM: 9653 | Tilt: 35.5/5.9/36.7 | Vib: 0.032 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9653,"tiltX":35.5,"tiltY":5.9,"tiltZ":36.7,"rotationZ":-0.58,"avgTiltMag":35.99,"temp":25.0,"pwm":13.33,"vibration":0.032,"autoMode":true}
+RPM: 6669 | Tilt: 42.9/-2.6/46.1 | Vib: 0.043 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6669,"tiltX":42.9,"tiltY":-2.6,"tiltZ":46.1,"rotationZ":-1.50,"avgTiltMag":43.01,"temp":25.0,"pwm":13.33,"vibration":0.043,"autoMode":true}
+RPM: 6666 | Tilt: 37.0/-13.1/41.4 | Vib: 0.019 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":37.0,"tiltY":-13.1,"tiltZ":41.4,"rotationZ":23.23,"avgTiltMag":39.26,"temp":25.0,"pwm":13.33,"vibration":0.019,"autoMode":true}
+RPM: 6666 | Tilt: 4.2/-2.1/3.5 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":4.2,"tiltY":-2.1,"tiltZ":3.5,"rotationZ":-1.60,"avgTiltMag":4.71,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 6666 | Tilt: -2.1/2.9/-2.1 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-2.1,"tiltY":2.9,"tiltZ":-2.1,"rotationZ":-1.67,"avgTiltMag":3.57,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 6666 | Tilt: -2.0/2.7/-1.9 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-2.0,"tiltY":2.7,"tiltZ":-1.9,"rotationZ":-1.47,"avgTiltMag":3.38,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: -1.4/2.0/-1.3 | Vib: 0.024 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-1.4,"tiltY":2.0,"tiltZ":-1.3,"rotationZ":-1.60,"avgTiltMag":2.45,"temp":25.0,"pwm":13.33,"vibration":0.024,"autoMode":true}
+RPM: 6666 | Tilt: -1.0/1.6/-0.9 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":-1.0,"tiltY":1.6,"tiltZ":-0.9,"rotationZ":-1.63,"avgTiltMag":1.85,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 7110 | Tilt: -0.6/1.3/-0.5 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7110,"tiltX":-0.6,"tiltY":1.3,"tiltZ":-0.5,"rotationZ":-1.68,"avgTiltMag":1.40,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 7326 | Tilt: -0.4/1.0/0.0 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7326,"tiltX":-0.4,"tiltY":1.0,"tiltZ":0.0,"rotationZ":-1.77,"avgTiltMag":1.13,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 6667 | Tilt: 0.0/0.9/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6667,"tiltX":0.0,"tiltY":0.9,"tiltZ":0.0,"rotationZ":-1.51,"avgTiltMag":0.92,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.8/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.67,"avgTiltMag":0.82,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.8/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.78,"avgTiltMag":0.81,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.8/0.0 | Vib: 0.024 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.65,"avgTiltMag":0.78,"temp":25.0,"pwm":13.33,"vibration":0.024,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.8/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.50,"avgTiltMag":0.77,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.7/0.0 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.57,"avgTiltMag":0.74,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 9999 | Tilt: 0.0/0.7/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9999,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.72,"avgTiltMag":0.71,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 9999 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9999,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.60,"avgTiltMag":0.74,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 9999 | Tilt: 0.0/0.8/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9999,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.56,"avgTiltMag":0.75,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 11061 | Tilt: 0.0/0.7/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":11061,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.61,"avgTiltMag":0.72,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 10532 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10532,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.55,"avgTiltMag":0.70,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 11061 | Tilt: 0.0/0.8/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":11061,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.61,"avgTiltMag":0.77,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 9420 | Tilt: 0.0/0.8/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":9420,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.46,"avgTiltMag":0.75,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 7238 | Tilt: 0.0/0.7/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7238,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.62,"avgTiltMag":0.68,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 10226 | Tilt: 0.0/0.8/0.0 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10226,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.79,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}
+RPM: 10648 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10648,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.48,"avgTiltMag":0.66,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 7907 | Tilt: 0.0/0.8/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7907,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.76,"avgTiltMag":0.78,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 7922 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":7922,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.56,"avgTiltMag":0.70,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6427 | Tilt: 0.0/0.7/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6427,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.76,"avgTiltMag":0.72,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 3864 | Tilt: 0.0/0.7/0.0 | Vib: 0.128 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":3864,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-0.73,"avgTiltMag":0.72,"temp":25.0,"pwm":13.33,"vibration":0.128,"autoMode":true}
+RPM: 3503 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":3503,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.59,"avgTiltMag":0.69,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6658 | Tilt: 0.0/0.7/0.0 | Vib: 0.027 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6658,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.66,"avgTiltMag":0.73,"temp":25.0,"pwm":13.33,"vibration":0.027,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.7/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.73,"avgTiltMag":0.72,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.8/0.0 | Vib: 0.031 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.43,"avgTiltMag":0.75,"temp":25.0,"pwm":13.33,"vibration":0.031,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.77,"avgTiltMag":0.72,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 6666 | Tilt: 0.0/0.7/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":6666,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.59,"avgTiltMag":0.73,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 11014 | Tilt: 0.0/0.7/0.0 | Vib: 0.030 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":11014,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.77,"avgTiltMag":0.67,"temp":25.0,"pwm":13.33,"vibration":0.030,"autoMode":true}
+RPM: 10000 | Tilt: 0.0/0.8/0.0 | Vib: 0.028 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":0.0,"tiltY":0.8,"tiltZ":0.0,"rotationZ":-1.61,"avgTiltMag":0.76,"temp":25.0,"pwm":13.33,"vibration":0.028,"autoMode":true}
+RPM: 10000 | Tilt: 0.0/0.7/0.0 | Vib: 0.026 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.73,"temp":25.0,"pwm":13.33,"vibration":0.026,"autoMode":true}
+RPM: 10400 | Tilt: 0.7/0.8/0.8 | Vib: 0.033 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10400,"tiltX":0.7,"tiltY":0.8,"tiltZ":0.8,"rotationZ":-1.24,"avgTiltMag":1.02,"temp":25.0,"pwm":13.33,"vibration":0.033,"autoMode":true}
+RPM: 10000 | Tilt: 0.0/0.7/0.0 | Vib: 0.025 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.76,"avgTiltMag":0.74,"temp":25.0,"pwm":13.33,"vibration":0.025,"autoMode":true}
+RPM: 10000 | Tilt: 0.0/0.6/0.0 | Vib: 0.029 g RMS | PWM: 13.33 | Auto: ON
+{"rpm":10000,"tiltX":0.0,"tiltY":0.6,"tiltZ":0.0,"rotationZ":-1.57,"avgTiltMag":0.65,"temp":25.0,"pwm":13.33,"vibration":0.029,"autoMode":true}

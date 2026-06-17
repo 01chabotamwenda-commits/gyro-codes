@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "adNUvHcRbMTHQIwBfXGft"
+uri = "file://platformio.tar.gz"
+type = "unspecified"
+title = "PlatformIO Project (all files + .ini)"
