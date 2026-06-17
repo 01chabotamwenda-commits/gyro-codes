@@ -1,6 +1,6 @@
 /**
  * main.cpp
- * ESP32 — MPU-6050 + TCRT5000 IR RPM Sensor + ESC Controller  v3.1
+ * ESP32 — MPU-6050 + TCRT5000 IR RPM Sensor + ESC Controller  v3.2
  *
  * PlatformIO build (platformio.ini: esp32doit-devkit-v1, espressif32, Arduino)
  *
@@ -43,9 +43,9 @@ void setup()
     Serial.begin(115200);
     delay(100);
 
-    Serial.println("DEVICE_INFO:esp32|VERSION:3.1|COMPONENTS:MPU6050,TCRT5000|BAUD:115200");
+    Serial.println("DEVICE_INFO:esp32|VERSION:3.2|COMPONENTS:MPU6050,TCRT5000|BAUD:115200");
     Serial.println("==============================================");
-    Serial.println("  ESP32 IMU + RPM + ESC CONTROLLER  v3.1");
+    Serial.println("  ESP32 IMU + RPM + ESC CONTROLLER  v3.2");
     Serial.println("==============================================");
     Serial.println("Auto-throttle OFF by default: use 'A' to enable");
     Serial.println("Keys: Z=Ref  S=Start  X=Stop  H=Up  L=Down  A=Auto");
@@ -55,7 +55,7 @@ void setup()
     Serial.println("==============================================");
     Serial.println();
 
-    // ── STEP 3: GPIO ─────────────────────────────────────────────────────────
+    // ── STEP 3: GPIO ──────────────────────────────────────────────────────────
     pinMode(PIN_RESET_BTN, INPUT_PULLUP);
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, LOW);
@@ -64,7 +64,7 @@ void setup()
     // ── STEP 4: IR interrupt ──────────────────────────────────────────────────
     attachInterrupt(digitalPinToInterrupt(PIN_TCRT), irPulseISR, FALLING);
 
-    // ── STEP 5: IMU ───────────────────────────────────────────────────────────
+    // ── STEP 5: IMU ──────────────────────────────────────────────────────────
     Wire.begin(21, 22);
     Wire.setClock(400000);
     initMPU6050();
@@ -72,7 +72,7 @@ void setup()
     // ── STEP 6: Arm ESC (3-second wait — listen for ESC beep sequence) ────────
     armESC();
 
-    // ── STEP 7: Seed timing & reset PID ──────────────────────────────────────
+    // ── STEP 7: Seed timing & reset PID ────────────────────────────────────
     lastTelemetryMs = millis();
     lastRpmReportMs = millis();
     atc.reset();
@@ -112,18 +112,20 @@ void loop()
     checkRPMTimeout();
     publishRPMValue();
 
-    // ── Auto-throttle (PID + Majorana feedforward) ────────────────────────────
+    // ── Auto-throttle (single-loop PID: tilt → throttle) ───────────────────
+    // Uses real-time tilt (not RPM) because the motor responds fast enough
+    // and the RPM sensor is too slow for a tight inner loop.
     if (autoMode && motorRunning && refSet)
     {
         float tiltMag = max(fabsf(errorX), fabsf(errorY));
-        int   target  = atc.update(tiltMag, rpmValue, throttle);
+        int   target  = atc.update(tiltMag);
         setThrottleTarget(target);
     }
 
-    // ── Non-blocking throttle ramp ────────────────────────────────────────────
+    // ── Non-blocking throttle ramp ─────────────────────────────────────────
     rampStep();
 
-    // ── Serial commands ───────────────────────────────────────────────────────
+    // ── Serial commands ──────────────────────────────────────────────────────
     pollSerial();
 
     // ── Telemetry ─────────────────────────────────────────────────────────────

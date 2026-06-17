@@ -1,29 +1,24 @@
 /**
  * auto_throttle.h
- * Cascade controller for ESP32 gyro stabilizer.
+ * Tilt-based auto-throttle controller.
  *
- * Architecture:  Tilt -> RPM target (outer PID) -> Throttle (inner PID + Majorana)
+ * Architecture:  Tilt -> PID -> Throttle
  *
- * -- Outer loop (1 Hz nominal) ----------------------------------------
- *   Input:  tiltMag (deg) -- max(|errorX|, |errorY|)
- *   Output: rpmTarget (RPM)
+ * Simplified single-loop PID (no cascade needed for this hardware):
+ *   When the gyro tilts, the motor must spin faster to generate restoring torque.
+ *   The controller maps tilt angle directly to throttle increase.
  *
- *   rpmTarget = majoranaRpm(tiltMag) + outerPid(tiltMag)
- *   majoranaRpm(tilt) = omega_s_min(tilt) * 60 / (2*pi)
- *   omega_s_min(tilt) = sqrt( (4*It*m*g*h / Is^2) * sin(theta) )
+ *   throttle = THROTTLE_MIN + Kp * tilt + Ki * integral(tilt)
  *
- * -- Inner loop (every Ts = 10 ms) -----------------------------------
- *   Input:  rpmTarget - rpmActual
- *   Output: throttle correction
+ *   tilt → error (positive = tilted) → PID output (positive = increase throttle)
+ *   → throttle (constrained to [THROTTLE_MIN, THROTTLE_MAX])
  *
- *   throttle = rpmToThrottle(rpmTarget) + innerPid(rpmTarget - rpmActual)
+ *   No RPM inner loop is needed because the motor response is fast enough
+ *   and the RPM sensor is too slow (250ms) for closed-loop RPM control.
  *
- *   rpmToThrottle(rpm) = rpm / Kv / V_batt -> servo units
- *   Kv -- motor RPM per volt (estimate ~6000 RPM/V for small drone motors)
+ *   Anti-windup: integral is clamped when throttle is saturated.
  *
- * -- Anti-windup -------------------------------------------------------
- *   Both loops: conditional integration -- stop integrating when output
- *   is saturated in the same direction as the error.
+ * Depends on: config.h
  */
 
 #pragma once
@@ -39,20 +34,15 @@ struct PidGains
     float Kd = 0.0f;
 };
 
-struct PidLimits
-{
-    float integral = 0.0f;
-    float output   = 0.0f;
-};
-
 // ---------------------------------------------------------------------------
-// Generic PID with conditional integration
+// Single-loop PID with anti-windup
 // ---------------------------------------------------------------------------
 class PidController
 {
 public:
     PidGains gains;
-    PidLimits limits;
+    float integralMax = 0.0f;
+    float outputMax   = 0.0f;
     float Ts = 0.01f;
 
     void reset()
@@ -71,78 +61,36 @@ public:
             _firstCall = false;
         }
 
-        float derivative = (error - _prevError) / dt;
+        // Derivative with small low-pass filter for noise
+        float rawDerivative = (error - _prevError) / dt;
+        _derivative = _derivative * 0.7f + rawDerivative * 0.3f;
         _prevError = error;
 
-        // Conditional integration anti-windup
-        float outTest = gains.Kp * error + gains.Ki * _integral + gains.Kd * derivative;
-        bool satHigh = (outTest >= limits.output) && (error > 0.0f);
-        bool satLow  = (outTest <= -limits.output) && (error < 0.0f);
+        // Proportional + Derivative
+        float P = gains.Kp * error;
+        float D = gains.Kd * _derivative;
+        float outTest = P + _integral + D;
+
+        // Anti-windup: only integrate if not saturated in the same direction
+        bool satHigh = (outTest >= outputMax) && (error > 0.0f);
+        bool satLow  = (outTest <= -outputMax) && (error < 0.0f);
         if (!satHigh && !satLow)
         {
-            _integral += error * dt;
-            _integral = constrain(_integral, -limits.integral, limits.integral);
+            _integral += error * dt * gains.Ki;
+            _integral = constrain(_integral, -integralMax, integralMax);
         }
 
-        float out = gains.Kp * error + gains.Ki * _integral + gains.Kd * derivative;
-        return constrain(out, -limits.output, limits.output);
+        float out = P + _integral + D;
+        return constrain(out, -outputMax, outputMax);
     }
+
+    float getIntegral() const { return _integral; }
 
 private:
     float _integral = 0.0f;
     float _prevError = 0.0f;
+    float _derivative = 0.0f;
     bool _firstCall = true;
-};
-
-// ---------------------------------------------------------------------------
-// AutoThrottleConfig
-// ---------------------------------------------------------------------------
-struct AutoThrottleConfig
-{
-    // -- Outer loop (tilt -> RPM target) --------------------------------
-    PidGains outerGains;
-    PidLimits outerLimits;
-
-    // -- Inner loop (RPM error -> throttle) -----------------------------
-    PidGains innerGains;
-    PidLimits innerLimits;
-
-    // -- Sampling period (seconds) ----------------------------------------
-    float Ts = 0.01f;
-
-    // -- Motor <-> RPM model --------------------------------------------
-    float rpmKv = 6000.0f;        // motor RPM per volt (estimate)
-    float batteryVoltage = 11.1f; // 3S LiPo nominal [V]
-    float supplyScale = 0.8f;     // Simulink supply scaling factor
-
-    // -- Majorana criterion ---------------------------------------------
-    float It = 2.5e-5f;   // transverse moment of inertia [kg*m^2]
-    float Is = 5.0e-5f;   // spin moment of inertia [kg*m^2]
-    float m  = 0.050f;    // rotor mass [kg]
-    float h  = 0.015f;    // CoM height above pivot [m]
-    float g  = 9.81f;     // gravitational acceleration [m/s^2]
-    float Ke = 0.003f;    // back-EMF constant [V*s/rad]
-
-    // -- Tilt dead-band -------------------------------------------------
-    float tiltDeadDeg = 0.1f;
-
-    // -- Constructor ----------------------------------------------------
-    AutoThrottleConfig()
-    {
-        // Default outer loop (tilt -> RPM): conservative
-        outerGains.Kp = 500.0f;    // 500 RPM per degree
-        outerGains.Ki = 20.0f;     // slow integral
-        outerGains.Kd = 50.0f;     // damping
-        outerLimits.integral = 5000.0f;
-        outerLimits.output   = 5000.0f;
-
-        // Default inner loop (RPM -> throttle): faster
-        innerGains.Kp = 0.08f;     // 0.08 throttle units per RPM error
-        innerGains.Ki = 0.002f;    // slow buildup
-        innerGains.Kd = 0.02f;     // damping
-        innerLimits.integral = 20.0f;
-        innerLimits.output   = 40.0f;
-    }
 };
 
 // ---------------------------------------------------------------------------
@@ -151,108 +99,94 @@ struct AutoThrottleConfig
 class AutoThrottleController
 {
 public:
-    AutoThrottleConfig cfg;
-    PidController outerPid;
-    PidController innerPid;
+    // --- Tuning parameters (all in units that make sense for the hardware) ---
+
+    // P gain: throttle [µs] per degree tilt.
+    //   If the motor needs 1500 µs to stabilise at 10° tilt, and idle is 1270 µs,
+    //   then Kp = (1500 - 1270) / 10 ≈ 23 µs/°.
+    //   Start with 25 and adjust based on the response.
+    float Kp = 25.0f;
+
+    // I gain: throttle [µs] per degree-second.
+    //   Slow integral to eliminate steady-state error.
+    //   Start with 2.0 and increase if the gyro settles with a tilt.
+    float Ki = 2.0f;
+
+    // D gain: throttle [µs] per degree/second.
+    //   Damping to prevent overshoot.
+    //   Start with 0.5 and increase if the gyro oscillates.
+    float Kd = 0.5f;
+
+    // Integral and output limits [throttle units = µs]
+    float integralMax = 200.0f;   // max integral windup
+    float outputMax   = 730.0f;   // max throttle increase (2000 - 1270 = 730 µs)
+
+    // Sampling period [seconds]
+    float Ts = 0.01f;  // 10 ms → 100 Hz
+
+    // Tilt dead-band [degrees]
+    float tiltDeadDeg = 0.5f;
+
+    // Controller state
+    float lastTilt = 0.0f;
+    float lastOutput = 0.0f;
+    float lastError = 0.0f;
+    float lastIntegral = 0.0f;
 
     AutoThrottleController() { reset(); }
 
     void reset()
     {
-        outerPid.reset();
-        innerPid.reset();
-        _vNowPrev = 0.0f;
+        pid.reset();
+        lastTilt = 0.0f;
+        lastOutput = 0.0f;
+        lastError = 0.0f;
+        lastIntegral = 0.0f;
     }
 
     /**
-     * update() -- cascade controller
+     * update()
      *
-     * @param tiltMag      max(|errorX|, |errorY|) in degrees
-     * @param rpmActual    current RPM from IR sensor
-     * @param throttleNow  current throttle (for supply path)
-     * @return             new target throttle
+     * @param tiltMag    max(|errorX|, |errorY|) in degrees
+     * @return           throttle target [µs]
      */
-    int update(float tiltMag, uint32_t rpmActual, int throttleNow)
+    int update(float tiltMag)
     {
-        // -- 0. Dead-band --------------------------------------------------
-        if (tiltMag < cfg.tiltDeadDeg)
+        // Dead-band
+        if (tiltMag < tiltDeadDeg)
             tiltMag = 0.0f;
 
-        // -- 1. Majorana feedforward -> minimum RPM for stability ----------
-        float tiltRad = tiltMag * (float)DEG_TO_RAD;
-        float sinTilt = sinf(tiltRad);
-        if (sinTilt < 0.0f) sinTilt = 0.0f;
+        // Set gains
+        pid.gains.Kp = Kp;
+        pid.gains.Ki = Ki;
+        pid.gains.Kd = Kd;
+        pid.integralMax = integralMax;
+        pid.outputMax = outputMax;
+        pid.Ts = Ts;
 
-        float majoranaGain = (4.0f * cfg.It * cfg.m * cfg.g * cfg.h)
-                             / (cfg.Is * cfg.Is);
-        float omegaMinRad = (majoranaGain * sinTilt > 0.0f)
-                            ? sqrtf(majoranaGain * sinTilt)
-                            : 0.0f;
-        // omega [rad/s] -> RPM:  RPM = omega * 60 / (2*pi)
-        float majoranaRpm = omegaMinRad * 60.0f / (2.0f * (float)PI);
+        // Error = tilt (positive = need more throttle)
+        float error = tiltMag;
+        float output = pid.update(error);
 
-        // -- 2. Outer loop: tilt -> RPM target -----------------------------
-        //   error = 0 - tiltMag (we want zero tilt)
-        float tiltError = 0.0f - tiltMag;
-        outerPid.gains = cfg.outerGains;
-        outerPid.limits = cfg.outerLimits;
-        outerPid.Ts = cfg.Ts;
-        float outerOut = outerPid.update(tiltError);
+        // Store diagnostics
+        lastTilt = tiltMag;
+        lastOutput = output;
+        lastError = error;
+        lastIntegral = pid.getIntegral();
 
-        // RPM target = minimum for stability + correction from tilt deviation
-        float rpmTarget = majoranaRpm + outerOut;
-        if (rpmTarget < 0.0f) rpmTarget = 0.0f;
-
-        // -- 3. Inner loop: RPM error -> throttle correction ---------------
-        // If RPM is 0, the sensor is dead (motor not spinning yet). Use feedforward only.
-        float innerOut = 0.0f;
-        float rpmError = 0.0f;
-        if (rpmActual > 0)
-        {
-            rpmError = rpmTarget - (float)rpmActual;
-            innerPid.gains = cfg.innerGains;
-            innerPid.limits = cfg.innerLimits;
-            innerPid.Ts = cfg.Ts;
-            innerOut = innerPid.update(rpmError);
-        }
-        else
-        {
-            innerPid.reset();  // clear PID state when sensor is dead
-        }
-
-        // -- 4. Feedforward throttle from RPM target -----------------------
-        //   RPM = Kv * V  ->  V = RPM / Kv
-        //   throttle = (V / V_batt) * range + THROTTLE_MIN
-        float rpmVoltage = rpmTarget / cfg.rpmKv;
-        float vSupply = fabsf(rpmVoltage * cfg.supplyScale);
-        vSupply = constrain(vSupply, 0.0f, cfg.batteryVoltage);
-        float throttleFF = voltageToThrottle(vSupply);
-
-        // -- 5. Total throttle = feedforward + inner PID correction --------
-        float throttleOut = throttleFF + innerOut;
-        _vNowPrev = vSupply;
-        _lastRpmTarget = rpmTarget;
-        _lastRpmError  = rpmError;
-
+        // Total throttle = idle + PID output
+        float throttleOut = (float)THROTTLE_MIN + output;
         return (int)constrain(throttleOut,
                               (float)THROTTLE_MIN,
                               (float)THROTTLE_MAX);
     }
 
-    // -- Conversion helpers ---------------------------------------------
-    float voltageToThrottle(float v) const
-    {
-        float t = v / cfg.batteryVoltage;
-        t = constrain(t, 0.0f, 1.0f);
-        return (float)THROTTLE_MIN + t * (float)(THROTTLE_MAX - THROTTLE_MIN);
-    }
-
     // Getters for telemetry
-    float getLastRpmTarget() const { return _lastRpmTarget; }
-    float getLastRpmError()  const { return _lastRpmError; }
+    float getLastTilt()    const { return lastTilt; }
+    float getLastOutput()  const { return lastOutput; }
+    float getLastError()   const { return lastError; }
+    float getLastIntegral() const { return lastIntegral; }
 
 private:
-    float _vNowPrev = 0.0f;
-    float _lastRpmTarget = 0.0f;
-    float _lastRpmError  = 0.0f;
+    PidController pid;
 };

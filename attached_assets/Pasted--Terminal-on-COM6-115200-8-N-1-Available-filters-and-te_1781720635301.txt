@@ -1,0 +1,367 @@
+
+--- Terminal on COM6 | 115200 8-N-1
+--- Available filters and text transformations: debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+␀�␀␀␀␀␀␀␀�␀␀�␀␀␀␀�␀�����␀�Ы�ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+DEVICE_INFO:esp32|VERSION:3.1|COMPONENTS:MPU6050,TCRT5000|BAUD:115200
+==============================================
+  ESP32 IMU + RPM + ESC CONTROLLER  v3.1
+==============================================
+Auto-throttle OFF by default: use 'A' to enable
+Keys: Z=Ref  S=Start  X=Stop  H=Up  L=Down  A=Auto
+CMDs: CMD:MOTOR_START / STOP / EMERGENCY_STOP
+      CMD:SPEED_UP / SPEED_DOWN / RESET_REF
+      CMD:AUTO_ON / AUTO_OFF
+==============================================
+
+[ARM] Sending min throttle (1000 us)...
+[ARM] Hold for 3 seconds — listen for ESC beeps.
+[ARM] ESC armed. Ready.
+STATUS:MOTOR=OFF
+STATUS:AUTO=OFF
+STATUS:REF_RESET=OK
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.78,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.025,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.66,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.81,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.025,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.56,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.79,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.021,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.84,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.025,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.66,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.026 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.76,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.026,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.74,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.021,"autoMode":false}
+[Key] Start motor
+--- RAMPING MOTOR UP ---
+STATUS:MOTOR=ON
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1000 µs (0.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.73,"avgTiltMag":0.00,"temp":25.0,"throttle":1000,"pwmPct":0.0,"vibration":0.021,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.024 g RMS | THR: 1100 µs (10.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.78,"avgTiltMag":0.00,"temp":25.0,"throttle":1100,"pwmPct":10.0,"vibration":0.024,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.024 g RMS | THR: 1200 µs (20.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.82,"avgTiltMag":0.00,"temp":25.0,"throttle":1200,"pwmPct":20.0,"vibration":0.024,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.29,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.032 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.54,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.032,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.022 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.14,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.022,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.69,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.027 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.60,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.027,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.038 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.56,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.038,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.024 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.50,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.024,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.16,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.4/0.0/0.0 | Vib: 0.036 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.46,"avgTiltMag":0.41,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.036,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.029 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.31,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.029,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.036 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.31,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.036,"autoMode":false}
+[Key] Speed up
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.032 g RMS | THR: 1310 µs (31.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.10,"avgTiltMag":0.00,"temp":25.0,"throttle":1310,"pwmPct":31.0,"vibration":0.032,"autoMode":false}
+RPM: 0 | Tilt: 0.4/0.0/0.0 | Vib: 0.022 g RMS | THR: 1320 µs (32.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.84,"avgTiltMag":0.44,"temp":25.0,"throttle":1320,"pwmPct":32.0,"vibration":0.022,"autoMode":false}
+[Key] Speed up
+RPM: 0 | Tilt: 0.6/0.0/0.0 | Vib: 0.028 g RMS | THR: 1365 µs (36.5%) | Auto: OFF
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.61,"avgTiltMag":0.59,"temp":25.0,"throttle":1365,"pwmPct":36.5,"vibration":0.028,"autoMode":false}
+RPM: 0 | Tilt: 1.6/0.0/0.0 | Vib: 0.051 g RMS | THR: 1370 µs (37.0%) | Auto: OFF
+{"rpm":0,"tiltX":1.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.66,"avgTiltMag":1.62,"temp":25.0,"throttle":1370,"pwmPct":37.0,"vibration":0.051,"autoMode":false}
+[Key] Speed down
+RPM: 0 | Tilt: 2.6/0.0/0.0 | Vib: 0.049 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":0,"tiltX":2.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.84,"avgTiltMag":2.58,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.049,"autoMode":false}
+RPM: 0 | Tilt: 2.3/0.0/0.0 | Vib: 0.047 g RMS | THR: 1320 µs (32.0%) | Auto: OFF
+{"rpm":0,"tiltX":2.3,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.79,"avgTiltMag":2.29,"temp":25.0,"throttle":1320,"pwmPct":32.0,"vibration":0.047,"autoMode":false}
+[Key] Speed down
+RPM: 0 | Tilt: 1.9/0.0/0.0 | Vib: 0.037 g RMS | THR: 1305 µs (30.5%) | Auto: OFF
+{"rpm":0,"tiltX":1.9,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.34,"avgTiltMag":1.88,"temp":25.0,"throttle":1305,"pwmPct":30.5,"vibration":0.037,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 0 | Tilt: 1.5/0.0/0.0 | Vib: 0.033 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":1.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.79,"avgTiltMag":1.52,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.033,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 0 | Tilt: 0.5/0.0/0.0 | Vib: 0.016 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.69,"avgTiltMag":0.51,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.016,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.038 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.37,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.038,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.37,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.027 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.02,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.027,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.018 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.23,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.018,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.22,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":false}
+[Key] Speed down
+RPM: 3157 | Tilt: 0.4/0.0/0.0 | Vib: 0.035 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.37,"avgTiltMag":0.45,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.035,"autoMode":false}
+RPM: 3157 | Tilt: 0.5/0.0/0.0 | Vib: 0.017 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.70,"avgTiltMag":0.46,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.017,"autoMode":false}
+RPM: 3157 | Tilt: 0.4/0.0/0.0 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.51,"avgTiltMag":0.43,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.039 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.18,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.039,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.93,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":false}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.024 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.22,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.024,"autoMode":false}
+RPM: 3157 | Tilt: 0.6/0.0/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.74,"avgTiltMag":0.59,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":false}
+RPM: 3157 | Tilt: 0.8/0.0/0.0 | Vib: 0.033 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.8,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.42,"avgTiltMag":0.82,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.033,"autoMode":false}
+RPM: 3157 | Tilt: 0.7/0.0/0.0 | Vib: 0.018 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.26,"avgTiltMag":0.71,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.018,"autoMode":false}
+RPM: 3157 | Tilt: 0.8/0.0/0.0 | Vib: 0.038 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.8,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.07,"avgTiltMag":0.78,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.038,"autoMode":false}
+RPM: 3157 | Tilt: 0.7/0.0/0.0 | Vib: 0.032 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.16,"avgTiltMag":0.74,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.032,"autoMode":false}
+RPM: 3157 | Tilt: 0.6/0.0/0.0 | Vib: 0.021 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":3157,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.35,"avgTiltMag":0.56,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.021,"autoMode":false}
+RPM: 2993 | Tilt: 0.5/0.0/0.0 | Vib: 0.036 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":2993,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.68,"avgTiltMag":0.48,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.036,"autoMode":false}
+[Key] Speed up
+RPM: 2993 | Tilt: 0.5/0.0/0.0 | Vib: 0.036 g RMS | THR: 1305 µs (30.5%) | Auto: OFF
+{"rpm":2993,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.27,"avgTiltMag":0.46,"temp":25.0,"throttle":1305,"pwmPct":30.5,"vibration":0.036,"autoMode":false}
+[Key] Speed up
+RPM: 2993 | Tilt: 0.8/0.0/0.0 | Vib: 0.036 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":0.8,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.73,"avgTiltMag":0.81,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.036,"autoMode":false}
+RPM: 2993 | Tilt: 1.8/0.0/0.0 | Vib: 0.046 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":1.8,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.15,"avgTiltMag":1.77,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.046,"autoMode":false}
+RPM: 2993 | Tilt: 2.1/0.0/0.0 | Vib: 0.053 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":2.1,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.02,"avgTiltMag":2.14,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.053,"autoMode":false}
+RPM: 2993 | Tilt: 2.3/0.0/0.0 | Vib: 0.067 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":2.3,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.95,"avgTiltMag":2.34,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.067,"autoMode":false}
+RPM: 2993 | Tilt: 2.4/0.0/0.0 | Vib: 0.064 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":2.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.41,"avgTiltMag":2.39,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.064,"autoMode":false}
+RPM: 2993 | Tilt: 2.4/0.0/0.0 | Vib: 0.063 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":2993,"tiltX":2.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-2.80,"avgTiltMag":2.42,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.063,"autoMode":false}
+RPM: 0 | Tilt: 2.4/0.0/0.0 | Vib: 0.058 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":0,"tiltX":2.4,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.24,"avgTiltMag":2.42,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.058,"autoMode":false}
+RPM: 0 | Tilt: 2.0/0.0/0.0 | Vib: 0.060 g RMS | THR: 1360 µs (36.0%) | Auto: OFF
+{"rpm":0,"tiltX":2.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.97,"avgTiltMag":1.96,"temp":25.0,"throttle":1360,"pwmPct":36.0,"vibration":0.060,"autoMode":false}
+[Key] Speed down
+RPM: 0 | Tilt: 2.1/0.0/0.0 | Vib: 0.050 g RMS | THR: 1310 µs (31.0%) | Auto: OFF
+{"rpm":0,"tiltX":2.1,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.47,"avgTiltMag":2.10,"temp":25.0,"throttle":1310,"pwmPct":31.0,"vibration":0.050,"autoMode":false}
+RPM: 0 | Tilt: 1.6/0.0/0.0 | Vib: 0.034 g RMS | THR: 1310 µs (31.0%) | Auto: OFF
+{"rpm":0,"tiltX":1.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.08,"avgTiltMag":1.60,"temp":25.0,"throttle":1310,"pwmPct":31.0,"vibration":0.034,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 0 | Tilt: 1.1/0.0/0.0 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":1.1,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.23,"avgTiltMag":1.07,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 0 | Tilt: 0.6/0.0/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.45,"avgTiltMag":0.56,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":false}
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+[Key] Speed down
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.023 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.37,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.023,"autoMode":false}
+RPM: 0 | Tilt: 0.5/0.0/0.0 | Vib: 0.026 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":0.18,"avgTiltMag":0.45,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.026,"autoMode":false}
+RPM: 0 | Tilt: 0.6/0.0/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.79,"avgTiltMag":0.60,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":false}
+RPM: 0 | Tilt: 0.7/0.0/0.0 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.56,"avgTiltMag":0.69,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":false}
+RPM: 0 | Tilt: 0.6/0.0/0.0 | Vib: 0.020 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.78,"avgTiltMag":0.59,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.020,"autoMode":false}
+RPM: 0 | Tilt: 0.6/0.0/0.0 | Vib: 0.033 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.99,"avgTiltMag":0.55,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.033,"autoMode":false}
+RPM: 0 | Tilt: 0.5/0.0/0.0 | Vib: 0.032 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.44,"avgTiltMag":0.50,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.032,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.017 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-0.89,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.017,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.25,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-3.34,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.86,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.024 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.88,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.024,"autoMode":false}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: OFF
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.79,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":false}
+STATUS:AUTO=ON
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.033 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.44,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.033,"autoMode":true}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.026 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.92,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.026,"autoMode":true}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.027 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.72,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.027,"autoMode":true}
+RPM: 1298 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":1298,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.79,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":true}
+RPM: 2855 | Tilt: 0.0/0.0/0.0 | Vib: 0.027 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":2855,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.87,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.027,"autoMode":true}
+RPM: 3148 | Tilt: 0.0/0.0/0.0 | Vib: 0.020 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3148,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.86,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.020,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.022 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.66,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.022,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.030 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.70,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.030,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.020 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.65,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.020,"autoMode":true}
+[Key] Reset reference
+STATUS:REF_RESET=OK
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.48,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.021,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.030 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.68,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.030,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.022 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.65,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.022,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.57,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.021,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.029 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.73,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.029,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.85,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.021 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.89,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.021,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.73,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.026 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.82,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.026,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/0.0/0.0 | Vib: 0.019 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.69,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.019,"autoMode":true}
+RPM: 3157 | Tilt: 0.0/-0.7/0.0 | Vib: 0.037 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":0.0,"tiltY":-0.7,"tiltZ":0.0,"rotationZ":-1.70,"avgTiltMag":0.73,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.037,"autoMode":true}
+RPM: 3157 | Tilt: 1.4/-3.1/-5.8 | Vib: 0.038 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":1.4,"tiltY":-3.1,"tiltZ":-5.8,"rotationZ":-0.95,"avgTiltMag":3.40,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.038,"autoMode":true}
+RPM: 3157 | Tilt: 10.1/-2.8/-15.9 | Vib: 0.018 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":10.1,"tiltY":-2.8,"tiltZ":-15.9,"rotationZ":-1.53,"avgTiltMag":10.46,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.018,"autoMode":true}
+RPM: 3157 | Tilt: 21.4/-2.3/-27.4 | Vib: 0.007 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":21.4,"tiltY":-2.3,"tiltZ":-27.4,"rotationZ":-1.80,"avgTiltMag":21.52,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.007,"autoMode":true}
+RPM: 3157 | Tilt: 33.8/0.0/-38.8 | Vib: 0.019 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":33.8,"tiltY":0.0,"tiltZ":-38.8,"rotationZ":3.46,"avgTiltMag":33.84,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.019,"autoMode":true}
+RPM: 3157 | Tilt: 34.6/1.8/-40.6 | Vib: 0.042 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":34.6,"tiltY":1.8,"tiltZ":-40.6,"rotationZ":-1.86,"avgTiltMag":34.69,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.042,"autoMode":true}
+RPM: 3157 | Tilt: 39.1/2.3/-45.0 | Vib: 0.010 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":39.1,"tiltY":2.3,"tiltZ":-45.0,"rotationZ":-1.59,"avgTiltMag":39.18,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.010,"autoMode":true}
+RPM: 3157 | Tilt: 27.0/9.4/-32.9 | Vib: 0.007 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":27.0,"tiltY":9.4,"tiltZ":-32.9,"rotationZ":-3.56,"avgTiltMag":28.56,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.007,"autoMode":true}
+RPM: 3157 | Tilt: 2.0/5.6/-5.4 | Vib: 0.165 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":3157,"tiltX":2.0,"tiltY":5.6,"tiltZ":-5.4,"rotationZ":-0.82,"avgTiltMag":5.90,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.165,"autoMode":true}
+RPM: 0 | Tilt: -1.2/-2.1/3.8 | Vib: 0.003 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":-1.2,"tiltY":-2.1,"tiltZ":3.8,"rotationZ":-1.74,"avgTiltMag":2.45,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.003,"autoMode":true}
+RPM: 0 | Tilt: -0.4/0.8/3.7 | Vib: 0.060 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":-0.4,"tiltY":0.8,"tiltZ":3.7,"rotationZ":1.86,"avgTiltMag":0.93,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.060,"autoMode":true}
+RPM: 0 | Tilt: 10.4/2.0/13.1 | Vib: 0.048 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":10.4,"tiltY":2.0,"tiltZ":13.1,"rotationZ":-2.76,"avgTiltMag":10.62,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.048,"autoMode":true}
+RPM: 0 | Tilt: 19.9/0.0/24.4 | Vib: 0.059 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":19.9,"tiltY":0.0,"tiltZ":24.4,"rotationZ":1.29,"avgTiltMag":19.88,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.059,"autoMode":true}
+RPM: 0 | Tilt: 25.8/-3.1/28.8 | Vib: 0.029 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":25.8,"tiltY":-3.1,"tiltZ":28.8,"rotationZ":-1.98,"avgTiltMag":26.02,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.029,"autoMode":true}
+RPM: 0 | Tilt: 15.9/-8.9/19.0 | Vib: 0.023 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":15.9,"tiltY":-8.9,"tiltZ":19.0,"rotationZ":0.31,"avgTiltMag":18.23,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.023,"autoMode":true}
+RPM: 0 | Tilt: 2.0/-2.5/2.9 | Vib: 0.027 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":2.0,"tiltY":-2.5,"tiltZ":2.9,"rotationZ":10.68,"avgTiltMag":3.18,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.027,"autoMode":true}
+RPM: 0 | Tilt: 3.3/2.1/-2.6 | Vib: 0.131 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":3.3,"tiltY":2.1,"tiltZ":-2.6,"rotationZ":0.29,"avgTiltMag":3.89,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.131,"autoMode":true}
+RPM: 0 | Tilt: 7.6/-6.6/-16.8 | Vib: 0.018 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":7.6,"tiltY":-6.6,"tiltZ":-16.8,"rotationZ":-4.24,"avgTiltMag":10.08,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.018,"autoMode":true}
+RPM: 0 | Tilt: 18.2/1.5/-25.9 | Vib: 0.008 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":18.2,"tiltY":1.5,"tiltZ":-25.9,"rotationZ":-1.18,"avgTiltMag":18.31,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.008,"autoMode":true}
+RPM: 0 | Tilt: 7.4/10.5/-12.4 | Vib: 0.091 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":7.4,"tiltY":10.5,"tiltZ":-12.4,"rotationZ":-0.47,"avgTiltMag":12.85,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.091,"autoMode":true}
+RPM: 0 | Tilt: 2.3/0.5/0.6 | Vib: 0.070 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":2.3,"tiltY":0.5,"tiltZ":0.6,"rotationZ":-1.26,"avgTiltMag":2.30,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.070,"autoMode":true}
+RPM: 0 | Tilt: 7.1/3.2/10.3 | Vib: 0.019 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":7.1,"tiltY":3.2,"tiltZ":10.3,"rotationZ":-1.66,"avgTiltMag":7.75,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.019,"autoMode":true}
+RPM: 0 | Tilt: 17.7/1.0/20.1 | Vib: 0.043 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":17.7,"tiltY":1.0,"tiltZ":20.1,"rotationZ":-7.68,"avgTiltMag":17.74,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.043,"autoMode":true}
+RPM: 0 | Tilt: 19.9/-4.3/20.8 | Vib: 0.039 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":19.9,"tiltY":-4.3,"tiltZ":20.8,"rotationZ":-4.95,"avgTiltMag":20.39,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.039,"autoMode":true}
+RPM: 0 | Tilt: 13.4/-2.3/14.9 | Vib: 0.021 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":13.4,"tiltY":-2.3,"tiltZ":14.9,"rotationZ":-1.57,"avgTiltMag":13.56,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.021,"autoMode":true}
+RPM: 0 | Tilt: 12.0/0.0/14.1 | Vib: 0.039 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":12.0,"tiltY":0.0,"tiltZ":14.1,"rotationZ":-1.94,"avgTiltMag":12.02,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.039,"autoMode":true}
+RPM: 0 | Tilt: 14.6/1.0/16.3 | Vib: 0.059 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":14.6,"tiltY":1.0,"tiltZ":16.3,"rotationZ":-4.01,"avgTiltMag":14.59,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.059,"autoMode":true}
+RPM: 0 | Tilt: 24.3/0.0/26.2 | Vib: 0.005 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":24.3,"tiltY":0.0,"tiltZ":26.2,"rotationZ":3.42,"avgTiltMag":24.32,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.005,"autoMode":true}
+RPM: 0 | Tilt: 15.6/-5.8/17.2 | Vib: 0.117 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":15.6,"tiltY":-5.8,"tiltZ":17.2,"rotationZ":-1.81,"avgTiltMag":16.65,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.117,"autoMode":true}
+RPM: 0 | Tilt: 3.0/0.0/1.5 | Vib: 0.019 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":3.0,"tiltY":0.0,"tiltZ":1.5,"rotationZ":-2.01,"avgTiltMag":2.99,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.019,"autoMode":true}
+RPM: 0 | Tilt: -0.8/1.4/-0.7 | Vib: 0.025 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":-0.8,"tiltY":1.4,"tiltZ":-0.7,"rotationZ":-1.83,"avgTiltMag":1.62,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.025,"autoMode":true}
+RPM: 0 | Tilt: -0.7/1.1/-0.4 | Vib: 0.032 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":-0.7,"tiltY":1.1,"tiltZ":-0.4,"rotationZ":-1.35,"avgTiltMag":1.31,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.032,"autoMode":true}
+RPM: 0 | Tilt: 0.0/0.7/0.0 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.7,"tiltZ":0.0,"rotationZ":-1.63,"avgTiltMag":0.67,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":true}
+RPM: 0 | Tilt: 0.0/0.0/0.0 | Vib: 0.018 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.0,"rotationZ":-1.85,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.018,"autoMode":true}
+RPM: 0 | Tilt: 0.0/0.0/0.5 | Vib: 0.031 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.0,"tiltY":0.0,"tiltZ":0.5,"rotationZ":-1.64,"avgTiltMag":0.00,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.031,"autoMode":true}
+RPM: 0 | Tilt: 0.5/0.0/0.6 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.5,"tiltY":0.0,"tiltZ":0.6,"rotationZ":-1.59,"avgTiltMag":0.49,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":true}
+RPM: 0 | Tilt: 0.6/0.0/0.8 | Vib: 0.020 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.8,"rotationZ":-1.85,"avgTiltMag":0.56,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.020,"autoMode":true}
+RPM: 0 | Tilt: 0.6/0.0/0.8 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.8,"rotationZ":-1.47,"avgTiltMag":0.61,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":true}
+RPM: 0 | Tilt: 0.6/0.0/0.8 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.6,"tiltY":0.0,"tiltZ":0.8,"rotationZ":-1.82,"avgTiltMag":0.64,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":true}
+RPM: 0 | Tilt: 0.7/0.0/0.8 | Vib: 0.019 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.8,"rotationZ":-2.18,"avgTiltMag":0.66,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.019,"autoMode":true}
+RPM: 0 | Tilt: 0.7/0.0/0.9 | Vib: 0.028 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.9,"rotationZ":-1.57,"avgTiltMag":0.71,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.028,"autoMode":true}
+RPM: 0 | Tilt: 0.7/0.0/0.8 | Vib: 0.026 g RMS | THR: 1270 µs (27.0%) | Auto: ON
+{"rpm":0,"tiltX":0.7,"tiltY":0.0,"tiltZ":0.8,"rotationZ":-1.79,"avgTiltMag":0.69,"temp":25.0,"throttle":1270,"pwmPct":27.0,"vibration":0.026,"autoMode":true}
