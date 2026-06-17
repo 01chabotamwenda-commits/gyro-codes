@@ -1,0 +1,105 @@
+#include <Arduino.h>
+
+#define ESC_PIN        4
+#define PWM_FREQ       50
+#define PWM_RESOLUTION 16
+
+#define ESC_MIN_US     1000
+#define ESC_MAX_US     2000
+#define ESC_MID_US     1500
+
+void setThrottle(uint16_t us) {
+  us = constrain(us, ESC_MIN_US, ESC_MAX_US);
+  uint32_t duty = (uint32_t)us * 65535 / 20000;
+  ledcWrite(ESC_PIN, duty);
+}
+
+void printHelp() {
+  Serial.println("\n╔══════════════════════════════════╗");
+  Serial.println("║   ESP32 Brushless Motor Tester   ║");
+  Serial.println("╠══════════════════════════════════╣");
+  Serial.println("║  Commands (type + Enter):        ║");
+  Serial.println("║  s      → Full sweep up & down   ║");
+  Serial.println("║  0      → Stop (1000 µs)         ║");
+  Serial.println("║  5      → Mid throttle (1500 µs) ║");
+  Serial.println("║  9      → Full throttle (2000 µs)║");
+  Serial.println("║  1000–2000 → Set exact µs value  ║");
+  Serial.println("║  h      → Show this help menu    ║");
+  Serial.println("╚══════════════════════════════════╝\n");
+}
+
+void armESC() {
+  Serial.println("[ARM] Sending min throttle (1000 µs)...");
+  setThrottle(ESC_MIN_US);
+  Serial.println("[ARM] Hold for 3 seconds — listen for ESC beeps.");
+  delay(3000);
+  Serial.println("[ARM] ESC armed. Ready.\n");
+}
+
+void sweepUp() {
+  Serial.println("[SWEEP] Ramping UP: 1000 → 2000 µs");
+  for (int us = ESC_MIN_US; us <= ESC_MAX_US; us += 10) {
+    setThrottle(us);
+    Serial.print("  → "); Serial.print(us); Serial.println(" µs");
+    delay(20);
+  }
+}
+
+void sweepDown() {
+  Serial.println("[SWEEP] Ramping DOWN: 2000 → 1000 µs");
+  for (int us = ESC_MAX_US; us >= ESC_MIN_US; us -= 10) {
+    setThrottle(us);
+    Serial.print("  → "); Serial.print(us); Serial.println(" µs");
+    delay(20);
+  }
+}
+
+void fullSweep() {
+  sweepUp();
+  delay(500);
+  sweepDown();
+  Serial.println("[SWEEP] Done.\n");
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  ledcAttach(ESC_PIN, PWM_FREQ, PWM_RESOLUTION);
+  setThrottle(ESC_MIN_US);
+  delay(100);
+
+  printHelp();
+  armESC();
+}
+
+void loop() {
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');
+    input.trim();
+
+    if (input == "s") {
+      fullSweep();
+    } else if (input == "0") {
+      setThrottle(ESC_MIN_US);
+      Serial.println("[SET] Stopped → 1000 µs");
+    } else if (input == "5") {
+      setThrottle(ESC_MID_US);
+      Serial.println("[SET] Mid throttle → 1500 µs");
+    } else if (input == "9") {
+      setThrottle(ESC_MAX_US);
+      Serial.println("[SET] Full throttle → 2000 µs");
+    } else if (input == "h") {
+      printHelp();
+    } else {
+      int val = input.toInt();
+      if (val >= ESC_MIN_US && val <= ESC_MAX_US) {
+        setThrottle(val);
+        Serial.print("[SET] Throttle → ");
+        Serial.print(val);
+        Serial.println(" µs");
+      } else {
+        Serial.println("[ERR] Unknown command. Type 'h' for help.");
+      }
+    }
+  }
+}
