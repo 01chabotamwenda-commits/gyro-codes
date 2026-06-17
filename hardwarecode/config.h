@@ -28,6 +28,7 @@ static const uint8_t REG_ACCEL_OUT = 0x3B;
 static const int     PWM_FREQ       = 50;     // 50 Hz — standard ESC signal
 static const int     PWM_RESOLUTION = 16;     // 16-bit → 65535 counts per period
 static const uint32_t PWM_PERIOD_US = 20000;  // 1 / 50 Hz = 20 000 µs
+static const int     PWM_CHANNEL    = 0;      // ledc channel (0–15) for old API
 
 // ── ESC / throttle constants (in MICROSECONDS, 1000–2000 µs range) ────────────
 static const int THROTTLE_ARM  = 1000;  // ESC arm / idle — minimum pulse

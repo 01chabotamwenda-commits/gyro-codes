@@ -3,7 +3,7 @@
  * ESC / ledc control, non-blocking throttle ramp,
  * and motor start / stop / emergency-stop logic.
  *
- * Uses the same ledcAttach / ledcWrite approach as the verified tester sketch.
+ * Uses ledcSetup + ledcAttachPin + ledcWrite (ESP32 Arduino core 2.x API).
  * No third-party library required — only the built-in ESP32 ledc peripheral.
  *
  * Depends on: config.h, rpm.h (resetRPMState)
@@ -32,7 +32,7 @@ static void setThrottle(int us)
 {
     us = constrain(us, THROTTLE_ARM, THROTTLE_MAX);
     uint32_t duty = (uint32_t)us * 65535UL / PWM_PERIOD_US;
-    ledcWrite(PIN_ESC, duty);
+    ledcWrite(PWM_CHANNEL, duty);
     throttle = us;
 }
 
@@ -102,7 +102,8 @@ static void emergencyStop()
 // ─────────────────────────────────────────────────────────────────────────────
 static void initESC()
 {
-    ledcAttach(PIN_ESC, PWM_FREQ, PWM_RESOLUTION);
+    ledcSetup(PWM_CHANNEL, PWM_FREQ, PWM_RESOLUTION);
+    ledcAttachPin(PIN_ESC, PWM_CHANNEL);
 
     Serial.println("[ARM] Sending min throttle (1000 µs)...");
     setThrottle(THROTTLE_ARM);
