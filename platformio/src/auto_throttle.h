@@ -190,3 +190,6 @@ public:
 private:
     PidController pid;
 };
+
+// Global controller instance (defined in main.cpp)
+extern AutoThrottleController atc;

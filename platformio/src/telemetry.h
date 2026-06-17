@@ -19,9 +19,6 @@
 #pragma once
 #include "config.h"
 
-// Forward declaration — defined in main.cpp
-extern AutoThrottleController atc;
-
 static uint32_t lastTelemetryMs = 0;
 
 static void sendTelemetry()

@@ -27,7 +27,7 @@
 #include "telemetry.h"     // 7. telemetry (uses all of the above)
 
 // ── Auto-throttle controller instance ────────────────────────────────────────
-static AutoThrottleController atc;
+AutoThrottleController atc;
 
 // ═════════════════════════════════════════════════════════════════════════════
 // setup
