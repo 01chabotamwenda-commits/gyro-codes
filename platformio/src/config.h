@@ -32,7 +32,7 @@ static const int     PWM_CHANNEL    = 0;      // ledc channel (0–15) for old A
 
 // ── ESC / throttle constants (in MICROSECONDS, 1000–2000 µs range) ────────────
 static const int THROTTLE_ARM  = 1000;  // ESC arm / idle — minimum pulse
-static const int THROTTLE_MIN  = 1270;  // minimum running throttle (motor starts ~1270 µs)
+static const int THROTTLE_MIN  = 1100;  // minimum running throttle
 static const int THROTTLE_MAX  = 2000;  // maximum throttle
 static const int THROTTLE_STEP = 50;    // manual speed-up / speed-down step (µs)
 

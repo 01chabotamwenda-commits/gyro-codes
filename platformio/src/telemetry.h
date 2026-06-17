@@ -25,23 +25,23 @@ static void sendTelemetry()
     lastTelemetryMs = millis();
 
     float tiltMag = sqrtf(errorX * errorX + errorY * errorY);
-
-    // Human-readable — shows raw µs (THR) and % (PWM) so you can see exactly what
-    // the ESC is receiving.  THR = 1000–2000 µs is the real signal.
-    float pwmPct = 0.0f;
+    float pwmPct  = 0.0f;
     if (throttle > THROTTLE_ARM)
+    {
         pwmPct = (float)(throttle - THROTTLE_ARM) /
                  (float)(THROTTLE_MAX - THROTTLE_ARM) * 100.0f;
+    }
 
-    Serial.printf("RPM: %lu | Tilt: %.1f/%.1f/%.1f | Vib: %.3f g RMS | THR: %d µs (%.1f%%) | Auto: %s\n",
+    // Human-readable
+    Serial.printf("RPM: %lu | Tilt: %.1f/%.1f/%.1f | Vib: %.3f g RMS | PWM: %.2f | Auto: %s\n",
                   rpmValue, errorX, errorY, errorZ,
-                  vibrationRms, throttle, pwmPct, autoMode ? "ON" : "OFF");
+                  vibrationRms, pwmPct, autoMode ? "ON" : "OFF");
 
     // JSON
     Serial.printf("{\"rpm\":%lu,\"tiltX\":%.1f,\"tiltY\":%.1f,\"tiltZ\":%.1f,"
                   "\"rotationZ\":%.2f,\"avgTiltMag\":%.2f,\"temp\":25.0,"
-                  "\"throttle\":%d,\"pwmPct\":%.1f,\"vibration\":%.3f,\"autoMode\":%s}\n",
+                  "\"pwm\":%.2f,\"vibration\":%.3f,\"autoMode\":%s}\n",
                   rpmValue, errorX, errorY, errorZ,
-                  gyroZ_dps, tiltMag, throttle, pwmPct, vibrationRms,
+                  gyroZ_dps, tiltMag, pwmPct, vibrationRms,
                   autoMode ? "true" : "false");
 }
